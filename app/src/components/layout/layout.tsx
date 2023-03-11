@@ -53,7 +53,7 @@ export default function Layout({ children, title = 'ScootRadio' }: { children: a
                 <title>{title}</title>
             </Head>
 
-            <AppBar ref={ref} position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, boxShadow: 0 }}>
+            <AppBar ref={ref} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, boxShadow: 0 }}>
                 <NavBar></NavBar>
             </AppBar>
 
@@ -81,7 +81,7 @@ export default function Layout({ children, title = 'ScootRadio' }: { children: a
                             overflowX: 'hidden',
                             marginTop: '48px',
                             paddingTop: '15px',
-                            height: 'calc( 100vh - 90px)',
+                            height: 'calc( 100vh - 70px)',
                             overflowY: 'auto',
                         }}
                     >
