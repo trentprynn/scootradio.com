@@ -21,7 +21,7 @@ const RadioStationBlock = ({ station }: { station: RadioStation }) => {
 
                 {activated && (
                     <>
-                        <ReactHlsPlayer src={station.url} autoPlay={true} controls={true} width="100%" />
+                        <ReactHlsPlayer src={station.url} autoPlay={true} controls={true} playsInline width="100%" />
 
                         <Button onClick={() => setActivated(!activated)}>Stop</Button>
                     </>
