@@ -1,0 +1,14 @@
+# local dependenices
+node_modules
+
+# secrets 
+.env
+
+# nextjs build output
+.next
+
+# macos files
+.DS_Store
+
+# debug files
+yarn-error.log
