@@ -12,7 +12,7 @@ export default withPageAuthRequired(function Profile({ user }) {
     const { radioStations } = useRadioStations()
 
     return (
-        <Layout title="Dashboard">
+        <Layout>
             <Container>
                 <Grid container spacing={2} justifyContent="center">
                     <Grid xs={12} lg={9}>
