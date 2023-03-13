@@ -1,9 +1,17 @@
 import { RadioStation } from '@/types/radio/radio-station.type'
 import { Box, Button, Card, CardContent, CardMedia, Typography } from '@mui/material'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import ReactHlsPlayer from '../hls-player/hls-player'
 
 const RadioStationBlock = ({ station }: { station: RadioStation }) => {
+    const playerRef: React.RefObject<HTMLVideoElement> | undefined = React.useRef<any>()
+
+    function adjustVolumeLower() {
+        if (playerRef && playerRef.current) {
+            playerRef.current.volume = 0.08
+        }
+    }
+
     const [activated, setActivated] = useState(false)
 
     return (
@@ -21,7 +29,15 @@ const RadioStationBlock = ({ station }: { station: RadioStation }) => {
 
                 {activated && (
                     <>
-                        <ReactHlsPlayer src={station.url} autoPlay={true} controls={true} playsInline width="100%" />
+                        <ReactHlsPlayer
+                            playerRef={playerRef}
+                            src={station.url}
+                            autoPlay={true}
+                            controls={true}
+                            playsInline
+                            width="100%"
+                            onLoadedData={() => adjustVolumeLower()}
+                        />
 
                         <Button onClick={() => setActivated(!activated)}>Stop</Button>
                     </>
