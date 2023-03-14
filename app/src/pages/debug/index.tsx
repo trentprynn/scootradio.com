@@ -8,9 +8,9 @@ import Grid from '@mui/system/Unstable_Grid'
 export default function Debug() {
     const newLocalSettings = useNewLocalSettings((state) => state)
 
-    const { user, getAccessTokenSilently } = useAuth0()
+    const { user } = useAuth0()
 
-    const { data, error } = useHealth(getAccessTokenSilently)
+    const { data, error } = useHealth()
 
     return (
         <Layout>
