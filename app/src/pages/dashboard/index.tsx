@@ -8,7 +8,7 @@ import Grid from '@mui/system/Unstable_Grid'
 const Dashboard = () => {
     const { getAccessTokenSilently } = useAuth0()
 
-    const { data } = useRadioStations(getAccessTokenSilently)
+    const { data: radioStations } = useRadioStations(getAccessTokenSilently)
 
     return (
         <Layout>
@@ -23,9 +23,9 @@ const Dashboard = () => {
                     </Grid>
 
                     <Grid container xs={12} lg={9} justifyContent="center">
-                        {data &&
-                            data.length > 0 &&
-                            data.map((radioStation) => (
+                        {radioStations &&
+                            radioStations.length > 0 &&
+                            radioStations.map((radioStation) => (
                                 <Grid xs="auto" key={radioStation.name}>
                                     <RadioStationBlock
                                         station={radioStation}

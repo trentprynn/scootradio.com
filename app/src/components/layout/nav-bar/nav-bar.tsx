@@ -22,18 +22,17 @@ export default function NavBar() {
         newLocalSettings.updateSettings(newModifiedSettings)
     }
 
-    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+    const [profilePopoverElement, setProfilePopoverElement] = React.useState<HTMLButtonElement | null>(null)
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget)
+    const handleProfileButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setProfilePopoverElement(event.currentTarget)
     }
 
-    const handleClose = () => {
-        setAnchorEl(null)
+    const handleProfilePopoverClose = () => {
+        setProfilePopoverElement(null)
     }
 
-    const open = Boolean(anchorEl)
-    const id = open ? 'simple-popover' : undefined
+    const profilePopoverOpen = Boolean(profilePopoverElement)
 
     return (
         <Toolbar variant="dense">
@@ -67,14 +66,14 @@ export default function NavBar() {
 
             {user && (
                 <div>
-                    <IconButton color="default" aria-describedby="profile-popover" onClick={handleClick}>
+                    <IconButton color="default" aria-describedby="profile-popover" onClick={handleProfileButtonClick}>
                         <AccountCircleIcon />
                     </IconButton>
                     <Popover
                         id="profile-popover"
-                        open={open}
-                        anchorEl={anchorEl}
-                        onClose={handleClose}
+                        open={profilePopoverOpen}
+                        anchorEl={profilePopoverElement}
+                        onClose={handleProfilePopoverClose}
                         anchorOrigin={{
                             vertical: 'bottom',
                             horizontal: 'left',
