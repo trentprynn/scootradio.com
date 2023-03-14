@@ -10,6 +10,25 @@ export default function Root() {
 
     const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0()
 
+    const handleLogin = () => {
+        loginWithRedirect({
+            appState: {
+                returnTo: '/dashboard',
+            },
+        })
+    }
+
+    const handleSignUp = () => {
+        loginWithRedirect({
+            appState: {
+                returnTo: '/dashboard',
+            },
+            authorizationParams: {
+                screen_hint: 'signup',
+            },
+        })
+    }
+
     // if logged in, redirect to the dashboard
     useEffect(() => {
         if (isAuthenticated) {
@@ -30,13 +49,25 @@ export default function Root() {
                                     </Typography>
                                     <Grid container justifyContent="center" sx={{ marginTop: 5 }}>
                                         <Grid xs="auto">
-                                            <Button
-                                                variant="contained"
-                                                type="button"
-                                                onClick={() => loginWithRedirect()}
-                                            >
-                                                Login
-                                            </Button>
+                                            <Box>
+                                                <Button variant="contained" type="button" onClick={() => handleLogin()}>
+                                                    Login
+                                                </Button>
+                                            </Box>
+                                        </Grid>
+                                    </Grid>
+
+                                    <Grid container justifyContent="center">
+                                        <Grid xs="auto">
+                                            <Box>
+                                                <Button
+                                                    variant="contained"
+                                                    type="button"
+                                                    onClick={() => handleSignUp()}
+                                                >
+                                                    Sign Up
+                                                </Button>
+                                            </Box>
                                         </Grid>
                                     </Grid>
                                 </>
