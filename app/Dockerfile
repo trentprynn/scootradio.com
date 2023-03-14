@@ -10,6 +10,9 @@ FROM node:16 AS build
 
 # On Railway, to access environment variables during container build, you must declare them as arguments
 # Reference: https://docs.railway.app/deploy/dockerfiles
+ARG NEXT_PUBLIC_AUTH0_DOMAIN
+ARG NEXT_PUBLIC_AUTH0_CLIENT_ID
+ARG NEXT_PUBLIC_AUTH0_AUDIENCE
 ARG NEXT_PUBLIC_WEB_URL
 ARG NEXT_PUBLIC_API_URL
 
