@@ -1,22 +1,16 @@
 import Layout from '@/components/layout/layout'
-import useHealth from '@/data/health/use-health'
-import useEphemeralLocalSettings from '@/data/state/local/settings/use-local-settings'
-import { useUser } from '@auth0/nextjs-auth0/client'
+import { useHealth } from '@/state/external/use-health'
+import { useNewLocalSettings } from '@/state/local/use-new-local-settings'
+import { useAuth0 } from '@auth0/auth0-react'
 import { Box, Container, Typography } from '@mui/material'
 import Grid from '@mui/system/Unstable_Grid'
-import { useEffect } from 'react'
 
 export default function Debug() {
-    const { localSettings } = useEphemeralLocalSettings()
+    const newLocalSettings = useNewLocalSettings((state) => state)
 
-    const { user } = useUser()
+    const { user, getAccessTokenSilently } = useAuth0()
 
-    const { healthData, healthDataFetchError } = useHealth()
-
-    useEffect(() => {
-        console.log('LOCAL SETTINGS CHANGE')
-        console.log(localSettings)
-    }, [localSettings])
+    const { data, error } = useHealth(getAccessTokenSilently)
 
     return (
         <Layout>
@@ -26,13 +20,14 @@ export default function Debug() {
                         <Box
                             sx={{
                                 color: 'black',
-                                background: 'pink',
+                                background: 'lightblue',
                                 padding: '2em',
                             }}
                         >
-                            <pre>{JSON.stringify(localSettings, null, '\t')}</pre>
+                            <pre>{JSON.stringify(newLocalSettings, null, '\t')}</pre>
                         </Box>
                     </Grid>
+
                     <Grid xs={12} lg={3}>
                         <Box
                             sx={{
@@ -46,11 +41,9 @@ export default function Debug() {
                                     API Health
                                 </Typography>
 
-                                {healthData && <Typography align="center">status: {healthData.status}</Typography>}
+                                {data && <Typography align="center">status: {data.status}</Typography>}
 
-                                {healthDataFetchError && (
-                                    <Typography align="center">error: {`${healthDataFetchError}`}</Typography>
-                                )}
+                                {error && <Typography align="center">error: {`${error}`}</Typography>}
                             </>
                         </Box>
                     </Grid>

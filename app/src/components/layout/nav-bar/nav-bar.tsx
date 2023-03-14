@@ -1,5 +1,5 @@
-import useEphemeralLocalSettings from '@/data/state/local/settings/use-local-settings'
-import { useUser } from '@auth0/nextjs-auth0/client'
+import { useNewLocalSettings } from '@/state/local/use-new-local-settings'
+import { useAuth0 } from '@auth0/auth0-react'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import MenuIcon from '@mui/icons-material/Menu'
 import { Box, Button, IconButton, Popover, Toolbar, Typography } from '@mui/material'
@@ -8,19 +8,18 @@ import Link from 'next/link'
 import React from 'react'
 
 export default function NavBar() {
-    const { localSettings, setLocalSettings } = useEphemeralLocalSettings()
+    const newLocalSettings = useNewLocalSettings((state) => state)
 
-    const { user, error, isLoading } = useUser()
+    const { user, logout } = useAuth0()
 
     const toggleSideNav = () => {
         console.log('TOGGLING SIDE NAV')
 
-        let modifiedSettings = Object.assign({}, localSettings)
-        modifiedSettings.mobileSideNavExpanded = !localSettings.mobileSideNavExpanded
+        let newModifiedSettings = Object.assign({}, newLocalSettings)
 
-        console.log(`${localSettings.mobileSideNavExpanded} -> ${modifiedSettings.mobileSideNavExpanded}`)
+        newModifiedSettings.mobileSideNavExpanded = !newModifiedSettings.mobileSideNavExpanded
 
-        setLocalSettings(modifiedSettings)
+        newLocalSettings.updateSettings(newModifiedSettings)
     }
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
@@ -38,7 +37,7 @@ export default function NavBar() {
 
     return (
         <Toolbar variant="dense">
-            {user && localSettings.mobile && (
+            {user && newLocalSettings.mobile && (
                 <IconButton
                     size="large"
                     edge="start"
@@ -83,7 +82,13 @@ export default function NavBar() {
                     >
                         <Typography sx={{ p: 2 }}>{user.email}</Typography>
                         <Box textAlign="center" sx={{ mb: 1 }}>
-                            <Button variant="contained" disableElevation size="small" href="/api/auth/logout">
+                            <Button
+                                variant="contained"
+                                disableElevation
+                                size="small"
+                                type="button"
+                                onClick={() => logout()}
+                            >
                                 Logout
                             </Button>
                         </Box>

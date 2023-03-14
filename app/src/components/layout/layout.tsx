@@ -1,5 +1,5 @@
-import useEphemeralLocalSettings from '@/data/state/local/settings/use-local-settings'
-import { useUser } from '@auth0/nextjs-auth0/client'
+import { useNewLocalSettings } from '@/state/local/use-new-local-settings'
+import { useAuth0 } from '@auth0/auth0-react'
 import { AppBar, Drawer } from '@mui/material'
 import { Box } from '@mui/system'
 import Head from 'next/head'
@@ -12,9 +12,9 @@ import SideNav from './side-nav/side-nav'
 export default function Layout({ children, title = 'ScootRadio' }: { children: any; title?: string }) {
     const router = useRouter()
 
-    const { localSettings, setLocalSettings } = useEphemeralLocalSettings()
+    const newLocalSettings = useNewLocalSettings((state) => state)
 
-    const { user, error, isLoading } = useUser()
+    const { user } = useAuth0()
 
     const { ref, width } = useResizeDetector()
 
@@ -22,16 +22,16 @@ export default function Layout({ children, title = 'ScootRadio' }: { children: a
         if (width) {
             // we only want to update the local settings if the width has changed so components only
             // re-render when appropriate
-            if (!localSettings.viewPortSizeInstantiated || localSettings.mobile !== width < 900) {
-                let modifiedSettings = Object.assign({}, localSettings)
+            if (!newLocalSettings.viewPortSizeInstantiated || newLocalSettings.mobile !== width < 900) {
+                let modifiedSettings = Object.assign({}, newLocalSettings)
 
                 modifiedSettings.viewPortSizeInstantiated = true
                 modifiedSettings.mobile = width < 900
 
-                setLocalSettings(modifiedSettings)
+                newLocalSettings.updateSettings(modifiedSettings)
             }
         }
-    }, [width, localSettings, setLocalSettings])
+    }, [newLocalSettings, width])
 
     const toggleDrawer = (state: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
         if (
@@ -41,10 +41,10 @@ export default function Layout({ children, title = 'ScootRadio' }: { children: a
             return
         }
 
-        let modifiedSettings = Object.assign({}, localSettings)
-        modifiedSettings.mobileSideNavExpanded = state
+        let newModifiedSettings = Object.assign({}, newLocalSettings)
+        newModifiedSettings.mobileSideNavExpanded = state
 
-        setLocalSettings(modifiedSettings)
+        newLocalSettings.updateSettings(newModifiedSettings)
     }
 
     return (
@@ -57,12 +57,12 @@ export default function Layout({ children, title = 'ScootRadio' }: { children: a
                 <NavBar></NavBar>
             </AppBar>
 
-            {localSettings.viewPortSizeInstantiated && (
+            {newLocalSettings.viewPortSizeInstantiated && (
                 <Box sx={{ display: 'flex' }} onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)}>
                     {user && (
                         <Drawer
-                            variant={localSettings.mobile ? 'temporary' : 'permanent'}
-                            open={localSettings.mobileSideNavExpanded}
+                            variant={newLocalSettings.mobile ? 'temporary' : 'permanent'}
+                            open={newLocalSettings.mobileSideNavExpanded}
                             sx={{
                                 width: '240px',
                                 flexShrink: 0,

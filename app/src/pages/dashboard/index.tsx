@@ -1,15 +1,14 @@
 import Layout from '@/components/layout/layout'
 import RadioStationBlock from '@/components/radio/radio-station-block.component'
-import useRadioStations from '@/data/radio-stations/use-radio-stations'
-import useEphemeralLocalSettings from '@/data/state/local/settings/use-local-settings'
-import { withPageAuthRequired } from '@auth0/nextjs-auth0/client'
+import { useRadioStations } from '@/state/external/use-radio-stations'
+import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react'
 import { Box, Container, Typography } from '@mui/material'
 import Grid from '@mui/system/Unstable_Grid'
 
-export default withPageAuthRequired(function Profile({ user }) {
-    const { localSettings } = useEphemeralLocalSettings()
+const Dashboard = () => {
+    const { getAccessTokenSilently } = useAuth0()
 
-    const { radioStations } = useRadioStations()
+    const { data } = useRadioStations(getAccessTokenSilently)
 
     return (
         <Layout>
@@ -24,9 +23,9 @@ export default withPageAuthRequired(function Profile({ user }) {
                     </Grid>
 
                     <Grid container xs={12} lg={9} justifyContent="center">
-                        {radioStations &&
-                            radioStations.length > 0 &&
-                            radioStations.map((radioStation) => (
+                        {data &&
+                            data.length > 0 &&
+                            data.map((radioStation) => (
                                 <Grid xs="auto" key={radioStation.name}>
                                     <RadioStationBlock
                                         station={radioStation}
@@ -39,4 +38,6 @@ export default withPageAuthRequired(function Profile({ user }) {
             </Container>
         </Layout>
     )
-})
+}
+
+export default withAuthenticationRequired(Dashboard)
