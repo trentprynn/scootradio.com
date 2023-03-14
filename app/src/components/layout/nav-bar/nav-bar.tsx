@@ -87,7 +87,7 @@ export default function NavBar() {
                                 disableElevation
                                 size="small"
                                 type="button"
-                                onClick={() => logout()}
+                                onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
                             >
                                 Logout
                             </Button>
