@@ -1,6 +1,6 @@
 ## Useful commands
 - Create DB `docker run --name scoot-radio-db -e POSTGRES_USER=scoot-radio-user -e POSTGRES_PASSWORD=scoot-radio-pass -e POSTGRES_DB=scoot-radio -p 5432:5432 -v scoot-radio-data:/var/lib/postgresql/data -d postgres`
-- Create `.env` file with necessary entries 
+- Create `.env` file with necessary entries (`cp .env.sample .env`)
 - Create virtual environment `python3 -m venv venv`
 - Activate virtual environment `source ./venv/bin/activate`
 - Install dependencies `python -m pip install -r requirements.txt`
