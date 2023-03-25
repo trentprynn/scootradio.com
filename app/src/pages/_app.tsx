@@ -1,6 +1,6 @@
 import '@/styles/global.css'
 import { Auth0Provider } from '@auth0/auth0-react'
-import { createTheme, ThemeProvider, useMediaQuery } from '@mui/material'
+import { createTheme, CssBaseline, ThemeProvider, useMediaQuery } from '@mui/material'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
@@ -44,6 +44,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             >
                 <QueryClientProvider client={queryClient}>
                     <ThemeProvider theme={theme}>
+                        <CssBaseline />
                         <Component {...pageProps} />
                     </ThemeProvider>
                 </QueryClientProvider>
