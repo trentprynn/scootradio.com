@@ -1,4 +1,4 @@
-import { useNewLocalSettings } from '@/state/local/use-new-local-settings'
+import { useLocalSettings } from '@/state/local/use-new-local-settings'
 import { useAuth0 } from '@auth0/auth0-react'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -8,18 +8,12 @@ import Link from 'next/link'
 import React from 'react'
 
 export default function NavBar() {
-    const newLocalSettings = useNewLocalSettings((state) => state)
+    const localSettings = useLocalSettings((state) => state)
 
     const { user, logout } = useAuth0()
 
     const toggleSideNav = () => {
-        console.log('TOGGLING SIDE NAV')
-
-        let newModifiedSettings = Object.assign({}, newLocalSettings)
-
-        newModifiedSettings.mobileSideNavExpanded = !newModifiedSettings.mobileSideNavExpanded
-
-        newLocalSettings.updateSettings(newModifiedSettings)
+        localSettings.setMobileSideNavExpanded(true)
     }
 
     const [profilePopoverElement, setProfilePopoverElement] = React.useState<HTMLButtonElement | null>(null)
@@ -36,7 +30,7 @@ export default function NavBar() {
 
     return (
         <Toolbar variant="dense">
-            {user && newLocalSettings.mobile && (
+            {user && localSettings.mobile && (
                 <IconButton
                     size="large"
                     edge="start"

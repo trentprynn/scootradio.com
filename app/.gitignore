@@ -6,6 +6,7 @@ node_modules
 
 # nextjs build output
 .next
+out
 
 # macos files
 .DS_Store

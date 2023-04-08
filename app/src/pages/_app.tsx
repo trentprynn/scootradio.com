@@ -4,7 +4,6 @@ import { createTheme, CssBaseline, ThemeProvider, useMediaQuery } from '@mui/mat
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
-import Router from 'next/router'
 import React from 'react'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
@@ -21,11 +20,21 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     )
 
     const onRedirectCallback = (appState: any) => {
-        // Use Next.js's Router.replace method to replace the url
-        Router.replace(appState?.returnTo || '/')
+        if (window && window.location !== appState?.returnTo) {
+            window.location = appState?.returnTo
+        }
     }
 
-    const queryClient = new QueryClient()
+    const queryClient = new QueryClient({
+        defaultOptions: {
+            queries: {
+                retry: false,
+                refetchOnWindowFocus: false,
+                refetchOnMount: false,
+                refetchOnReconnect: false,
+            },
+        },
+    })
 
     return (
         <>
@@ -40,6 +49,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                 authorizationParams={{
                     redirect_uri: typeof window !== 'undefined' ? window.location.origin : undefined,
                     audience: `${process.env.NEXT_PUBLIC_AUTH0_AUDIENCE}`,
+                    scope: 'openid profile email offline_access',
                 }}
             >
                 <QueryClientProvider client={queryClient}>

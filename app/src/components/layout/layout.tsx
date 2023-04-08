@@ -1,37 +1,32 @@
-import { useNewLocalSettings } from '@/state/local/use-new-local-settings'
+import { useLocalSettings } from '@/state/local/use-new-local-settings'
 import { useAuth0 } from '@auth0/auth0-react'
-import { AppBar, Drawer } from '@mui/material'
+import { AppBar, Drawer, useMediaQuery, useTheme } from '@mui/material'
 import { Box } from '@mui/system'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { useResizeDetector } from 'react-resize-detector'
 import NavBar from './nav-bar/nav-bar'
 import SideNav from './side-nav/side-nav'
 
 export default function Layout({ children, title = 'ScootRadio' }: { children: any; title?: string }) {
     const router = useRouter()
 
-    const newLocalSettings = useNewLocalSettings((state) => state)
+    const localSettings = useLocalSettings((state) => state)
 
     const { user } = useAuth0()
 
-    const { ref, width } = useResizeDetector()
+    const theme = useTheme()
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'))
 
     useEffect(() => {
-        if (width) {
-            // we only want to update the local settings if the width has changed so components only
-            // re-render when appropriate
-            if (!newLocalSettings.viewPortSizeInstantiated || newLocalSettings.mobile !== width < 900) {
-                let modifiedSettings = Object.assign({}, newLocalSettings)
-
-                modifiedSettings.viewPortSizeInstantiated = true
-                modifiedSettings.mobile = width < 900
-
-                newLocalSettings.updateSettings(modifiedSettings)
-            }
+        if (!localSettings.viewPortSizeInstantiated) {
+            localSettings.setViewPortSizeInstantiated(true)
         }
-    }, [newLocalSettings, width])
+
+        if (localSettings.mobile !== isSmallScreen) {
+            localSettings.setMobile(isSmallScreen)
+        }
+    }, [localSettings, isSmallScreen])
 
     const toggleDrawer = (state: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
         if (
@@ -41,10 +36,7 @@ export default function Layout({ children, title = 'ScootRadio' }: { children: a
             return
         }
 
-        let newModifiedSettings = Object.assign({}, newLocalSettings)
-        newModifiedSettings.mobileSideNavExpanded = state
-
-        newLocalSettings.updateSettings(newModifiedSettings)
+        localSettings.setMobileSideNavExpanded(false)
     }
 
     return (
@@ -53,16 +45,16 @@ export default function Layout({ children, title = 'ScootRadio' }: { children: a
                 <title>{title}</title>
             </Head>
 
-            <AppBar ref={ref} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, boxShadow: 0 }}>
+            <AppBar sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, boxShadow: 0 }}>
                 <NavBar></NavBar>
             </AppBar>
 
-            {newLocalSettings.viewPortSizeInstantiated && (
+            {localSettings.viewPortSizeInstantiated && (
                 <Box sx={{ display: 'flex' }} onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)}>
                     {user && (
                         <Drawer
-                            variant={newLocalSettings.mobile ? 'temporary' : 'permanent'}
-                            open={newLocalSettings.mobileSideNavExpanded}
+                            variant={localSettings.mobile ? 'temporary' : 'permanent'}
+                            open={localSettings.mobileSideNavExpanded}
                             sx={{
                                 width: '240px',
                                 flexShrink: 0,

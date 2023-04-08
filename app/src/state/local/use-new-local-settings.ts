@@ -8,8 +8,10 @@ const initialSettings: EphemeralLocalSettings = {
     viewPortSizeInstantiated: false,
 }
 
-export const useNewLocalSettings = create(
+export const useLocalSettings = create(
     combine(initialSettings, (replace) => ({
-        updateSettings: (to: EphemeralLocalSettings) => replace(to),
+        setMobile: (to: boolean) => replace({ mobile: to }),
+        setMobileSideNavExpanded: (to: boolean) => replace({ mobileSideNavExpanded: to }),
+        setViewPortSizeInstantiated: (to: boolean) => replace({ viewPortSizeInstantiated: to }),
     }))
 )

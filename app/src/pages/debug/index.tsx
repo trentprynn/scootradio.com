@@ -1,12 +1,12 @@
 import Layout from '@/components/layout/layout'
 import { useHealth } from '@/state/external/use-health'
-import { useNewLocalSettings } from '@/state/local/use-new-local-settings'
+import { useLocalSettings } from '@/state/local/use-new-local-settings'
 import { useAuth0 } from '@auth0/auth0-react'
 import { Box, Container, Typography } from '@mui/material'
 import Grid from '@mui/system/Unstable_Grid'
 
 export default function Debug() {
-    const newLocalSettings = useNewLocalSettings((state) => state)
+    const localSettings = useLocalSettings((state) => state)
 
     const { user } = useAuth0()
 
@@ -24,7 +24,7 @@ export default function Debug() {
                                 padding: '2em',
                             }}
                         >
-                            <pre>{JSON.stringify(newLocalSettings, null, '\t')}</pre>
+                            <pre>{JSON.stringify(localSettings, null, '\t')}</pre>
                         </Box>
                     </Grid>
 
