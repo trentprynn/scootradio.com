@@ -1,7 +1,8 @@
+import { ReactQueryClient } from '@/config/react-query-client'
 import '@/styles/global.css'
 import { Auth0Provider } from '@auth0/auth0-react'
 import { createTheme, CssBaseline, ThemeProvider, useMediaQuery } from '@mui/material'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import React from 'react'
@@ -25,17 +26,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         }
     }
 
-    const queryClient = new QueryClient({
-        defaultOptions: {
-            queries: {
-                retry: false,
-                refetchOnWindowFocus: false,
-                refetchOnMount: false,
-                refetchOnReconnect: false,
-            },
-        },
-    })
-
     return (
         <>
             <Head>
@@ -52,7 +42,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                     scope: 'openid profile email offline_access',
                 }}
             >
-                <QueryClientProvider client={queryClient}>
+                <QueryClientProvider client={ReactQueryClient}>
                     <ThemeProvider theme={theme}>
                         <CssBaseline />
                         <Component {...pageProps} />
