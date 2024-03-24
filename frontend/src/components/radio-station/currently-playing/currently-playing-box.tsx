@@ -33,6 +33,13 @@ export function CurrentlyPlayingBox() {
         videoRef.current.src = currentStation.stream_url
         videoRef.current.play()
         setIsPlaying(true)
+
+        // Add metadata for iOS "Now Playing"
+        if ('metadata' in videoRef.current) {
+            videoRef.current.metadata = {
+                title: currentStation.display_name,
+            }
+        }
     }, [currentStation])
 
     useEffect(() => {
@@ -79,13 +86,7 @@ export function CurrentlyPlayingBox() {
             </Box>
 
             <Box hidden>
-                <video
-                    ref={videoRef}
-                    src={currentStation.stream_url}
-                    // type="application/x-mpegURL"
-                    controls={isLargerThan768}
-                    style={{ width: '100%', height: 'auto' }}
-                />
+                <video ref={videoRef} src={currentStation.stream_url} />
             </Box>
         </>
     )
