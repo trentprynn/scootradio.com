@@ -1,4 +1,5 @@
 import { API_URLS } from '@/api/api-url-constants'
+import { LOUD_ZOD_FAILURE_ENABLED } from '@/config/app-settings'
 import { getAxiosInstance } from '@/config/axios-instance'
 import { RadioStation, RadioStationSchema } from '../types/radio-station.type'
 
@@ -13,7 +14,7 @@ const fetchRadioStation = async (stationName: string): Promise<RadioStation> => 
         if (!parsedResult.success) {
             console.error(`Failed to parse result from ${url}`, parsedResult.error)
 
-            if (process.env.NEXT_PUBLIC_ZOD_LOUD_FAIL_ENABLED) {
+            if (LOUD_ZOD_FAILURE_ENABLED) {
                 throw parsedResult.error
             }
 
@@ -35,7 +36,7 @@ const fetchAllRadioStations = async (): Promise<RadioStation[]> => {
         if (!parsedResult.success) {
             console.error(`Failed to parse result from ${url}`, parsedResult.error)
 
-            if (process.env.NEXT_PUBLIC_ZOD_LOUD_FAIL_ENABLED) {
+            if (LOUD_ZOD_FAILURE_ENABLED) {
                 throw parsedResult.error
             }
 

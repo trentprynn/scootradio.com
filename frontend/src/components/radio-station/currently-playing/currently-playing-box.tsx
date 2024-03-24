@@ -1,14 +1,11 @@
 'use client'
 
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
-import { Box, Container, IconButton, Stack, Text, useColorMode, useColorModeValue, useMediaQuery } from '@chakra-ui/react'
+import { Box, Container, IconButton, Stack, Text, useMediaQuery } from '@chakra-ui/react'
 import { useEffect, useRef, useState } from 'react'
 import { FaPause, FaPlay } from 'react-icons/fa'
 
 export function CurrentlyPlayingBox() {
-
-    const {colorMode} = useColorMode()
-
     const { currentStation } = useRadioPlayerState()
     const [isPlaying, setIsPlaying] = useState(false)
     const [isLargerThan768] = useMediaQuery('(min-width: 768px)')
@@ -64,15 +61,7 @@ export function CurrentlyPlayingBox() {
 
     return (
         <>
-            <Box
-                position="fixed"
-                bottom="0"
-                width="100%"
-                backgroundColor={'blackAlpha.300'}
-
-                p={4}
-                zIndex="sticky"
-            >
+            <Box position="fixed" bottom="0" width="100%" backgroundColor={'blackAlpha.300'} p={4} zIndex="sticky">
                 <Container>
                     <Stack direction={'row'} justifyContent={'space-between'}>
                         <Box>
