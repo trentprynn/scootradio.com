@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = ""
+authors = ["trentprynn <trentprynn@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.scripts]
+start = "scripts.start:main"
+lint = "scripts.lint:main"
+create-migration = "scripts.create_migration:main"
+migrate = "scripts.migrate:main"
+seed = "scripts.seed:main"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+SQLAlchemy = "^2.0.28"
+alembic = "^1.13.1"
+uvicorn = "^0.28.0"
+fastapi = "^0.110.0"
+psycopg = "^3.1.18"
+pydantic = "^2.6.4"
+pydantic-settings = "^2.2.1"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.8.0"
+ruff = "^0.2.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
