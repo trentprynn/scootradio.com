@@ -2,6 +2,7 @@ import { NavBar } from '@/components/core/layout/nav-bar'
 import { Providers } from '@/components/core/providers/providers'
 import { CurrentlyPlayingBox } from '@/components/radio-station/currently-playing/currently-playing-box'
 import type { Metadata } from 'next'
+import Script from 'next/script'
 
 export const metadata: Metadata = {
     title: 'scootradio.com',
@@ -35,6 +36,9 @@ export default function RootLayout({
                     <CurrentlyPlayingBox />
                 </Providers>
             </body>
+            {process.env.NODE_ENV === 'production' && (
+                <Script async defer data-collect-dnt="true" src="https://sa.scootradio.com/latest.js" />
+            )}
         </html>
     )
 }
