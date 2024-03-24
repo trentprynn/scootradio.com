@@ -8,7 +8,7 @@ export default function NotFoundRedirect({
 }: Readonly<{
     children: React.ReactNode
 }>) {
-    const { push } = useRouter()
+    const { replace } = useRouter()
 
     const [redirected, setRedirected] = useState(false)
 
@@ -22,13 +22,13 @@ export default function NotFoundRedirect({
         }
 
         const redirectRoot = async () => {
-            push('/')
+            replace('/')
             setRedirected(true)
         }
 
         redirectedRootOnce.current = true
         redirectRoot()
-    }, [push])
+    }, [replace])
 
     if (!redirected) {
         return null
