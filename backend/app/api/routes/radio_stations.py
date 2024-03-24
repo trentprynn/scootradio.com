@@ -13,7 +13,7 @@ def read_all_radio_stations(session: SessionMiddleware) -> list[RadioStationDTO]
     Get radio station by name.
     """
 
-    find_stations_statement = select(RadioStationModel).order_by(RadioStationModel.name)
+    find_stations_statement = select(RadioStationModel)
 
     radio_station_models = session.scalars(find_stations_statement).all()
 

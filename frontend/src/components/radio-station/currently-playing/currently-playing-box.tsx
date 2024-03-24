@@ -1,14 +1,12 @@
 'use client'
 
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
-import { Box, Container, IconButton, Stack, Text, useMediaQuery } from '@chakra-ui/react'
-import { useEffect, useRef, useState } from 'react'
+import { Box, Container, IconButton, Stack, Text } from '@chakra-ui/react'
+import { useEffect, useRef } from 'react'
 import { FaPause, FaPlay } from 'react-icons/fa'
 
 export function CurrentlyPlayingBox() {
-    const { currentStation } = useRadioPlayerState()
-    const [isPlaying, setIsPlaying] = useState(false)
-    const [isLargerThan768] = useMediaQuery('(min-width: 768px)')
+    const { currentStation, isPlaying, setIsPlaying } = useRadioPlayerState()
     const videoRef = useRef<HTMLVideoElement | null>(null)
 
     const lastPlayedStationRef = useRef<string | null>(null)
@@ -40,27 +38,32 @@ export function CurrentlyPlayingBox() {
                 title: currentStation.display_name,
             }
         }
-    }, [currentStation])
+    }, [currentStation, setIsPlaying])
 
     useEffect(() => {
-        if (!currentStation) {
+        if (!currentStation && isPlaying) {
             setIsPlaying(false)
         }
-    }, [currentStation])
+    }, [currentStation, isPlaying, setIsPlaying])
 
-    const handlePlayPause = () => {
+    const lastConsumedIsPlayingRef = useRef<boolean | null>(null)
+    useEffect(() => {
         if (!videoRef.current) {
             return
         }
 
-        if (isPlaying) {
-            videoRef.current.pause()
-        } else {
-            videoRef.current.play()
+        if (lastConsumedIsPlayingRef.current === isPlaying) {
+            return
         }
 
-        setIsPlaying(!isPlaying)
-    }
+        lastConsumedIsPlayingRef.current = isPlaying
+
+        if (isPlaying) {
+            videoRef.current.play()
+        } else {
+            videoRef.current.pause()
+        }
+    }, [isPlaying])
 
     if (!currentStation) {
         return null
@@ -79,7 +82,7 @@ export function CurrentlyPlayingBox() {
                         <IconButton
                             aria-label="Play pause button"
                             icon={isPlaying ? <FaPause /> : <FaPlay />}
-                            onClick={handlePlayPause}
+                            onClick={() => setIsPlaying(!isPlaying)}
                         />
                     </Stack>
                 </Container>
