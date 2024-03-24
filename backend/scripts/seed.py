@@ -15,7 +15,7 @@ seed_radio_stations: list[RadioStationModel] = [
         name="kexp",
         display_name="KEXP",
         stream_url="https://kexp-mp3-128.streamguys1.com/kexp128.mp3",
-        description="KEXP is a non-commercial radio station licensed to Seattle, Washington, United States, specializing in alternative and indie rock.",
+        description="KEXP is a non-commercial radio station licensed to Seattle, Washington.",
         image_url="https://cdn-profiles.tunein.com/s32537/images/brickg.jpg?t=637214650990000000",
     ),
 ]
