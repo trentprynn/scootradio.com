@@ -1,7 +1,7 @@
 import traceback
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, status
 from contextlib import asynccontextmanager
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from scripts.migrate import migrate
 from scripts.seed import seed
 from app.api.routes import radio_stations, health
@@ -51,3 +51,21 @@ app.router.include_router(health.router, prefix="/health", tags=["health"])
 app.router.include_router(
     radio_stations.router, prefix="/radio-stations", tags=["radio-stations"]
 )
+
+
+@app.get(
+    "/",
+    tags=["root"],
+    response_class=RedirectResponse,
+    status_code=status.HTTP_302_FOUND,
+    summary="Root to docs redirect",
+    description="This endpoint redirects to the API documentation.",
+)
+def root_to_docs():
+    """
+    Redirects to the API documentation.
+
+    Returns:
+        RedirectResponse: A redirect response object that redirects to /docs.
+    """
+    return RedirectResponse(url="/docs")
