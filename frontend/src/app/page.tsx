@@ -1,7 +1,7 @@
 'use client'
 import { useAllRadioStations } from '@/api/radio-stations/react-queries/use-all-radio-stations'
 import { AnimatedWave } from '@/components/animations/animated-wave'
-import { PaddedErrorMessageDisplay } from '@/components/core/error-handling/padded-error-message-display'
+import { FullPageErrorIndicator } from '@/components/core/error-handling/full-page-error-indicator'
 import { StandardPageWrapper } from '@/components/core/layout/standard-page-wrapper'
 import { FullPageLoadingIndicator } from '@/components/core/loading-indication/full-page-loading-indicator'
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
@@ -34,7 +34,7 @@ export default function Home() {
 
     if (!radioStations) {
         return (
-            <PaddedErrorMessageDisplay
+            <FullPageErrorIndicator
                 title="Failed to load radio stations"
                 description={getErrorMessage(radioStationsFetchError)}
             />
