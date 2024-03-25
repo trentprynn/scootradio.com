@@ -1,12 +1,15 @@
 'use client'
 
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
-import { Box, Container, IconButton, Stack, Text } from '@chakra-ui/react'
+import { Box, Container, IconButton, Stack, Text, useColorModeValue } from '@chakra-ui/react'
 import { useEffect, useRef } from 'react'
 import { FaPause, FaPlay } from 'react-icons/fa'
 
 export function CurrentlyPlayingBox() {
     const { currentStation, isPlaying, setIsPlaying } = useRadioPlayerState()
+
+    const bgColor = useColorModeValue('gray.200', 'gray.900')
+
     const videoRef = useRef<HTMLVideoElement | null>(null)
 
     const lastPlayedStationRef = useRef<string | null>(null)
@@ -71,7 +74,7 @@ export function CurrentlyPlayingBox() {
 
     return (
         <>
-            <Box position="fixed" bottom="0" width="100%" backgroundColor={'blackAlpha.300'} p={4} zIndex="sticky">
+            <Box position="sticky" bottom="0" width="100%" backgroundColor={bgColor} p={4} zIndex="sticky">
                 <Container>
                     <Stack direction={'row'} justifyContent={'space-between'}>
                         <Box>

@@ -1,6 +1,8 @@
+import { VH100Box } from '@/components/core/layout/vh-100-box'
 import { NavBar } from '@/components/core/layout/nav-bar'
 import { Providers } from '@/components/core/providers/providers'
 import { CurrentlyPlayingBox } from '@/components/radio-station/currently-playing/currently-playing-box'
+import { Spacer } from '@chakra-ui/react'
 import type { Metadata } from 'next'
 import Script from 'next/script'
 
@@ -31,9 +33,12 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
             <body>
                 <Providers>
-                    <NavBar />
-                    {children}
-                    <CurrentlyPlayingBox />
+                    <VH100Box>
+                        <NavBar />
+                        {children}
+                        <Spacer />
+                        <CurrentlyPlayingBox />
+                    </VH100Box>
                 </Providers>
             </body>
             {process.env.NODE_ENV === 'production' && (
