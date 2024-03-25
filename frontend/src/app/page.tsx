@@ -43,7 +43,7 @@ export default function Home() {
 
     return (
         <StandardPageWrapper>
-            <Accordion allowMultiple defaultIndex={[0, 1]}>
+            <Accordion allowMultiple defaultIndex={Array.from({ length: radioStations.length }, (_, i) => i)}>
                 {radioStations.map((radioStation) => (
                     <AccordionItem key={radioStation.name}>
                         <h2>
