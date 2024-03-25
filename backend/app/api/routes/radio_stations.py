@@ -2,7 +2,7 @@ from app.api.middlewares.session_middleware import SessionMiddleware
 from fastapi import APIRouter, HTTPException
 from app.models.radio_station import RadioStationModel
 from app.dtos.radio_station import RadioStationDTO
-from sqlalchemy import desc, select
+from sqlalchemy import select
 
 router = APIRouter()
 
@@ -13,9 +13,7 @@ def read_all_radio_stations(session: SessionMiddleware) -> list[RadioStationDTO]
     Get radio station by name.
     """
 
-    find_stations_statement = select(RadioStationModel).order_by(
-        desc(RadioStationModel.name)
-    )
+    find_stations_statement = select(RadioStationModel)
 
     radio_station_models = session.scalars(find_stations_statement).all()
 

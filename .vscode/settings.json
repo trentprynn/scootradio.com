@@ -4,6 +4,7 @@
         "fastapi",
         "kexp",
         "kxci",
+        "Marymount",
         "PGHOST",
         "pydantic",
         "SQLALCHEMY",
