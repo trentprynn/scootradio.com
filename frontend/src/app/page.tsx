@@ -1,4 +1,5 @@
 'use client'
+
 import { useAllRadioStations } from '@/api/radio-stations/react-queries/use-all-radio-stations'
 import { AnimatedWave } from '@/components/animations/animated-wave'
 import { FullPageErrorIndicator } from '@/components/core/error-handling/full-page-error-indicator'

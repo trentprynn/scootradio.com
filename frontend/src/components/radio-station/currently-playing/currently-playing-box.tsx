@@ -68,6 +68,29 @@ export function CurrentlyPlayingBox() {
         }
     }, [isPlaying])
 
+    useEffect(() => {
+        const video = videoRef.current
+        if (!video) {
+            return
+        }
+
+        const handlePause = () => {
+            setIsPlaying(false)
+        }
+
+        const handlePlay = () => {
+            setIsPlaying(true)
+        }
+
+        video.addEventListener('pause', handlePause)
+        video.addEventListener('play', handlePlay)
+
+        return () => {
+            video.removeEventListener('pause', handlePause)
+            video.removeEventListener('play', handlePlay)
+        }
+    }, [setIsPlaying])
+
     if (!currentStation) {
         return null
     }

@@ -1,5 +1,5 @@
-import { VH100Box } from '@/components/core/layout/vh-100-box'
 import { NavBar } from '@/components/core/layout/nav-bar'
+import { VH100Box } from '@/components/core/layout/vh-100-box'
 import { Providers } from '@/components/core/providers/providers'
 import { CurrentlyPlayingBox } from '@/components/radio-station/currently-playing/currently-playing-box'
 import { Spacer } from '@chakra-ui/react'
