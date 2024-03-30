@@ -38,14 +38,12 @@ def seed():
 
             existing_seed_station = session.scalars(find_seed_statement).first()
 
-            if existing_seed_station:
-                print(
-                    f"Radio Station {seed_radio_station.name} already exists, skipping insertion."
-                )
+            if existing_seed_station and existing_seed_station == seed_radio_station:
+                print(f"{seed_radio_station.name} up to date, skipping")
                 continue
 
-            print(f"Inserting {seed_radio_station.name}")
-            session.add(seed_radio_station)
+            print(f"inserting / updating {seed_radio_station.name}")
+            session.merge(seed_radio_station)
 
         session.commit()
 
