@@ -1,14 +1,18 @@
-from app.api.middlewares.session_middleware import SessionMiddleware
-from fastapi import APIRouter, HTTPException
+from app.api.dependencies import SessionDep, get_session
+from fastapi import APIRouter, Depends, HTTPException
 from app.models.radio_station import RadioStationModel
 from app.dtos.radio_station import RadioStationDTO
 from sqlalchemy import select
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/radio-stations",
+    tags=["radio-stations"],
+    dependencies=[Depends(get_session)],
+)
 
 
-@router.get("", response_model=list[RadioStationDTO])
-def read_all_radio_stations(session: SessionMiddleware) -> list[RadioStationDTO]:
+@router.get("")
+def read_all_radio_stations(session: SessionDep) -> list[RadioStationDTO]:
     """
     Get radio station by name.
     """
@@ -27,7 +31,7 @@ def read_all_radio_stations(session: SessionMiddleware) -> list[RadioStationDTO]
 
 
 @router.get("/{name}", response_model=RadioStationDTO)
-def read_radio_station(session: SessionMiddleware, name: str) -> RadioStationDTO:
+def read_radio_station(session: SessionDep, name: str) -> RadioStationDTO:
     """
     Get radio station by name.
     """

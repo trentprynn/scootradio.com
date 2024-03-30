@@ -3,6 +3,7 @@ from alembic import command
 
 
 def migrate():
+    print("Running migrations")
     alembic_cfg = Config("alembic.ini")
     command.upgrade(alembic_cfg, "head")
 

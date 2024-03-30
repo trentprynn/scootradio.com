@@ -29,6 +29,7 @@ seed_radio_stations: list[RadioStationModel] = [
 
 
 def seed():
+    print("Running seed")
     with Session(engine) as session:
         for seed_radio_station in seed_radio_stations:
             find_seed_statement = select(RadioStationModel).filter_by(

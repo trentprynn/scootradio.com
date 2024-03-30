@@ -2,7 +2,11 @@ from app.dtos.health_check import HealthCheckDTO
 from fastapi import APIRouter
 from datetime import datetime
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/health",
+    tags=["health"],
+    dependencies=[],
+)
 
 
 @router.get("")
