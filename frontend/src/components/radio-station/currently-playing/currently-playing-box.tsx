@@ -1,95 +1,29 @@
 'use client'
 
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
-import { Box, Container, IconButton, Stack, Text, useColorModeValue } from '@chakra-ui/react'
-import { useEffect, useRef } from 'react'
+import { Box, Container, IconButton, Spinner, Stack, Text, useColorModeValue } from '@chakra-ui/react'
+import lodash from 'lodash'
+import { useEffect, useRef, useState } from 'react'
 import { FaPause, FaPlay } from 'react-icons/fa'
+import ReactPlayer from 'react-player'
 
 export function CurrentlyPlayingBox() {
     const { currentStation, isPlaying, setIsPlaying } = useRadioPlayerState()
 
+    const [loading, setLoading] = useState(false)
+
+    const lastStationRef = useRef(currentStation)
+    useEffect(() => {
+        if (lodash.isEqual(currentStation, lastStationRef.current)) {
+            return
+        }
+
+        lastStationRef.current = currentStation
+
+        setLoading(true)
+    }, [currentStation])
+
     const bgColor = useColorModeValue('gray.200', 'gray.900')
-
-    const videoRef = useRef<HTMLVideoElement | null>(null)
-
-    const lastPlayedStationRef = useRef<string | null>(null)
-    useEffect(() => {
-        // the purpose of this effect is to player
-        // the radio station when the current station changes
-
-        if (!videoRef.current) {
-            return
-        }
-
-        if (!currentStation) {
-            return
-        }
-
-        if (currentStation.name == lastPlayedStationRef.current) {
-            return
-        }
-
-        lastPlayedStationRef.current = currentStation.name
-
-        videoRef.current.src = currentStation.stream_url
-        videoRef.current.play()
-        setIsPlaying(true)
-
-        // Add metadata for iOS "Now Playing"
-        if ('metadata' in videoRef.current) {
-            videoRef.current.metadata = {
-                title: currentStation.display_name,
-            }
-        }
-    }, [currentStation, setIsPlaying])
-
-    useEffect(() => {
-        if (!currentStation && isPlaying) {
-            setIsPlaying(false)
-        }
-    }, [currentStation, isPlaying, setIsPlaying])
-
-    const lastConsumedIsPlayingRef = useRef<boolean | null>(null)
-    useEffect(() => {
-        if (!videoRef.current) {
-            return
-        }
-
-        if (lastConsumedIsPlayingRef.current === isPlaying) {
-            return
-        }
-
-        lastConsumedIsPlayingRef.current = isPlaying
-
-        if (isPlaying) {
-            videoRef.current.play()
-        } else {
-            videoRef.current.pause()
-        }
-    }, [isPlaying])
-
-    useEffect(() => {
-        const video = videoRef.current
-        if (!video) {
-            return
-        }
-
-        const handlePause = () => {
-            setIsPlaying(false)
-        }
-
-        const handlePlay = () => {
-            setIsPlaying(true)
-        }
-
-        video.addEventListener('pause', handlePause)
-        video.addEventListener('play', handlePlay)
-
-        return () => {
-            video.removeEventListener('pause', handlePause)
-            video.removeEventListener('play', handlePlay)
-        }
-    }, [setIsPlaying])
 
     if (!currentStation) {
         return null
@@ -105,17 +39,36 @@ export function CurrentlyPlayingBox() {
                             <Text>{currentStation.display_name}</Text>
                         </Box>
 
-                        <IconButton
-                            aria-label="Play pause button"
-                            icon={isPlaying ? <FaPause /> : <FaPlay />}
-                            onClick={() => setIsPlaying(!isPlaying)}
-                        />
+                        {loading ? (
+                            <Stack direction={'row'} alignItems={'center'}>
+                                <Spinner size="md" />
+                            </Stack>
+                        ) : (
+                            <IconButton
+                                aria-label="Play pause button"
+                                icon={isPlaying ? <FaPause /> : <FaPlay />}
+                                onClick={() => setIsPlaying(!isPlaying)}
+                            />
+                        )}
                     </Stack>
                 </Container>
             </Box>
 
             <Box hidden>
-                <video ref={videoRef} src={currentStation.stream_url} />
+                <ReactPlayer
+                    url={currentStation.stream_url}
+                    playing={isPlaying}
+                    onPlay={() => {
+                        setLoading(false)
+
+                        if (!isPlaying) {
+                            setIsPlaying(true)
+                        }
+                    }}
+                    onPause={() => setIsPlaying(false)}
+                    onError={() => setIsPlaying(false)}
+                    onEnded={() => setIsPlaying(false)}
+                />
             </Box>
         </>
     )

@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/react'
 
 export default function Home() {
-    const { setCurrentStation, currentStation, isPlaying, setIsPlaying } = useRadioPlayerState()
+    const { playStation, turnOff, currentStation, isPlaying, setIsPlaying } = useRadioPlayerState()
 
     const {
         data: radioStations,
@@ -74,19 +74,13 @@ export default function Home() {
                                     ) : (
                                         <Button
                                             onClick={() => {
-                                                if (!currentStation) {
-                                                    setCurrentStation(radioStation)
+                                                if (!currentStation || currentStation.name !== radioStation.name) {
+                                                    playStation(radioStation)
                                                     return
                                                 }
 
-                                                if (currentStation.name === radioStation.name) {
-                                                    if (!isPlaying) {
-                                                        setIsPlaying(true)
-                                                    }
-                                                }
-
-                                                if (currentStation.name !== radioStation.name) {
-                                                    setCurrentStation(radioStation)
+                                                if (currentStation.name === radioStation.name && !isPlaying) {
+                                                    setIsPlaying(true)
                                                 }
                                             }}
                                         >
