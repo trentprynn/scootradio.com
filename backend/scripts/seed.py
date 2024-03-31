@@ -3,6 +3,7 @@ from sqlalchemy.sql import select
 from app.core.db import engine
 from sqlalchemy.orm import Session
 from app.models.radio_station import RadioStationModel
+from app.core.config import settings
 from .prestart import prestart
 
 logging.basicConfig(level=logging.INFO)
@@ -14,21 +15,21 @@ seed_radio_stations: list[RadioStationModel] = [
         display_name="KXCI",
         stream_url="https://ais-sa1.streamon.fm/7005_64k.mp3",
         description="KXCI is a community radio station in Tucson, Arizona.",
-        image_url="https://s3.amazonaws.com/streaming-player-assets/KXCI/custom/images/kxci-logo-20170816165540.png",
+        image_url=f"{settings.API_BASE_URL}/static/station-logos/kxci.png",
     ),
     RadioStationModel(
         name="kexp",
         display_name="KEXP",
         stream_url="https://kexp-mp3-128.streamguys1.com/kexp128.mp3",
         description="KEXP is a non-commercial radio station licensed to Seattle, Washington.",
-        image_url="https://4.bp.blogspot.com/-oCZc4ZfDod4/WfTOSdh9dKI/AAAAAAAAXEw/QNHfn2BxxbwzuVrmL4s3Wnpn_VftB_9tACLcBGAs/s1600/kexp5.jpg",
+        image_url=f"{settings.API_BASE_URL}/static/station-logos/kexp.png",
     ),
     RadioStationModel(
         name="kxlu",
         display_name="KXLU",
         stream_url="http://kxlu.streamguys1.com/kxlu-hi",
-        description="KXLU is a radio station broadcasting out of Loyola Marymount University in Los Angeles, California.",
-        image_url="https://i0.wp.com/indiepulsemusic.com/wp-content/uploads/2018/03/kxlu-logo-revised.png?fit=424%2C160&ssl=1",
+        description="KXLU is a radio station broadcasting out of Loyola Marymount University in Los Angeles.",
+        image_url=f"{settings.API_BASE_URL}/static/station-logos/kxlu.png",
     ),
 ]
 

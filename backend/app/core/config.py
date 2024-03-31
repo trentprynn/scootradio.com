@@ -15,7 +15,7 @@ class Settings(BaseSettings):
 
     ENVIRONMENT: Literal["local", "staging", "production"]
 
-    SECRET_KEY: str
+    API_BASE_URL: str
 
     PGHOST: str
     PGPORT: int

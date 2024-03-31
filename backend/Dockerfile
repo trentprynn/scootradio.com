@@ -20,6 +20,8 @@ COPY ./alembic.ini /app/
 
 COPY ./scripts /app/scripts
 
+COPY ./static /app/static
+
 COPY ./app /app/app
 
 CMD export PORT="${PORT:-8000}" && uvicorn "app.main:app" --host "0.0.0.0" --port "$PORT"
