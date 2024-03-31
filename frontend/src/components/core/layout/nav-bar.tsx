@@ -3,27 +3,24 @@
 import { Link } from '@chakra-ui/next-js'
 import {
     Box,
-    Collapse,
+    Button,
     Flex,
     Icon,
-    IconButton,
     Image,
     Popover,
     PopoverContent,
     PopoverTrigger,
+    Spacer,
     Stack,
     Text,
     Tooltip,
+    useBreakpointValue,
     useColorModeValue,
-    useDisclosure,
 } from '@chakra-ui/react'
-import { Fragment } from 'react'
-import { FaBars, FaChevronRight, FaX } from 'react-icons/fa6'
+import { FaChevronRight } from 'react-icons/fa6'
 import { IoLogoVenmo } from 'react-icons/io5'
 
 export function NavBar() {
-    const { isOpen, onToggle } = useDisclosure()
-
     return (
         <Box>
             <Flex
@@ -37,21 +34,13 @@ export function NavBar() {
                 borderColor={useColorModeValue('gray.200', 'gray.900')}
                 align={'center'}
             >
-                <Flex flex={{ base: 1, md: 'auto' }} ml={{ base: -2 }} display={{ base: 'flex', md: 'none' }}>
-                    <IconButton
-                        onClick={onToggle}
-                        icon={isOpen ? <Icon as={FaX} w={5} h={4} /> : <Icon as={FaBars} w={5} h={5} />}
-                        variant={'ghost'}
-                        aria-label={'Toggle Navigation'}
-                    />
-                </Flex>
-                <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
+                <Stack direction={'row'} spacing={4}>
                     <Image boxSize={'32px'} src="/logo192.png" alt="ScootRadio logo" />
 
-                    <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
-                        <DesktopNav />
-                    </Flex>
-                </Flex>
+                    <AboutPopover />
+                </Stack>
+
+                <Spacer />
 
                 <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'}>
                     <Tooltip label={'Tip me?'}>
@@ -67,64 +56,53 @@ export function NavBar() {
                     </Tooltip>
                 </Stack>
             </Flex>
-
-            <Collapse in={isOpen} animateOpacity>
-                <MobileNav />
-            </Collapse>
         </Box>
     )
 }
 
-const DesktopNav = () => {
-    const linkColor = useColorModeValue('gray.600', 'gray.200')
-    const linkHoverColor = useColorModeValue('gray.800', 'white')
+const AboutPopover = () => {
     const popoverContentBgColor = useColorModeValue('white', 'gray.800')
+
+    const trigger = useBreakpointValue<'click' | 'hover' | undefined>(
+        {
+            base: 'click',
+            md: 'hover',
+        },
+        {
+            fallback: 'click',
+        }
+    )
 
     return (
         <Stack direction={'row'} spacing={4}>
-            {NAV_ITEMS.map((navItem) => (
-                <Box key={navItem.label}>
-                    <Popover trigger={'hover'} placement={'bottom-start'}>
-                        <PopoverTrigger>
-                            <Box
-                                as="a"
-                                href={navItem.href ?? '#'}
-                                onClick={(e: any) => e.preventDefault()}
-                                fontWeight={500}
-                                color={linkColor}
-                                _hover={{
-                                    textDecoration: 'none',
-                                    color: linkHoverColor,
-                                }}
-                            >
-                                <Text mt={1}>{navItem.label}</Text>
-                            </Box>
-                        </PopoverTrigger>
-
-                        {navItem.children && (
-                            <PopoverContent
-                                border={0}
-                                boxShadow={'xl'}
-                                bg={popoverContentBgColor}
-                                p={4}
-                                rounded={'xl'}
-                                minW={'sm'}
-                            >
-                                <Stack>
-                                    {navItem.children.map((child) => (
-                                        <DesktopSubNav key={child.label} {...child} />
-                                    ))}
-                                </Stack>
-                            </PopoverContent>
-                        )}
-                    </Popover>
-                </Box>
-            ))}
+            <Popover trigger={trigger}>
+                <PopoverTrigger>
+                    <Button variant={'ghost'} size="sm">
+                        About
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent border={0} boxShadow={'xl'} bg={popoverContentBgColor} p={4} rounded={'xl'} minW={'sm'}>
+                    <Stack>
+                        <AboutPopoverSubItem label="Creator" subLabel="Trent Prynn" href={'https://trentprynn.com'} />
+                        <AboutPopoverSubItem
+                            label="Source Code"
+                            subLabel="GitHub"
+                            href={'https://github.com/trentprynn/scootradio.com'}
+                        />
+                    </Stack>
+                </PopoverContent>
+            </Popover>
         </Stack>
     )
 }
 
-const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
+type AboutPopoverSubItemProps = {
+    label: string
+    href: string
+    subLabel: string
+}
+
+const AboutPopoverSubItem = ({ label, href, subLabel }: AboutPopoverSubItemProps) => {
     return (
         <Box
             as="a"
@@ -158,84 +136,3 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
         </Box>
     )
 }
-
-const MobileNav = () => {
-    return (
-        <Stack bg={useColorModeValue('white', 'gray.800')} p={4} display={{ md: 'none' }}>
-            {NAV_ITEMS.map((navItem) => (
-                <MobileNavItem key={navItem.label} {...navItem} />
-            ))}
-        </Stack>
-    )
-}
-
-const MobileNavItem = ({ label, children, href }: NavItem) => {
-    return (
-        <Stack spacing={4}>
-            <Box
-                py={2}
-                as="a"
-                href={href ?? '#'}
-                justifyContent="space-between"
-                alignItems="center"
-                _hover={{
-                    textDecoration: 'none',
-                }}
-            >
-                <Text fontWeight={600} color={useColorModeValue('gray.600', 'gray.200')}>
-                    {label}
-                </Text>
-            </Box>
-
-            <Collapse in={true} animateOpacity style={{ marginTop: '0!important' }}>
-                <Stack
-                    pl={4}
-                    borderLeft={1}
-                    borderStyle={'solid'}
-                    borderColor={useColorModeValue('gray.200', 'gray.700')}
-                    align={'start'}
-                >
-                    {children &&
-                        children.map((child, index) => (
-                            <Fragment key={index}>
-                                <Box as="a" py={2} href={child.href} target="_blank">
-                                    {child.label}
-                                </Box>
-
-                                {child.subLabel && (
-                                    <Box as="a" href={child.href} target="_blank" fontWeight={200}>
-                                        {child.subLabel}
-                                    </Box>
-                                )}
-                            </Fragment>
-                        ))}
-                </Stack>
-            </Collapse>
-        </Stack>
-    )
-}
-
-interface NavItem {
-    label: string
-    subLabel?: string
-    children?: Array<NavItem>
-    href?: string
-}
-
-const NAV_ITEMS: Array<NavItem> = [
-    {
-        label: 'About',
-        children: [
-            {
-                label: 'Creator',
-                subLabel: 'Trent Prynn',
-                href: 'https://trentprynn.com',
-            },
-            {
-                label: 'Source Code',
-                subLabel: 'GitHub',
-                href: 'https://github.com/trentprynn/scootradio.com',
-            },
-        ],
-    },
-]
