@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status
 
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, PlainTextResponse
 
 router = APIRouter(
     prefix="",
@@ -15,6 +15,7 @@ router = APIRouter(
     status_code=status.HTTP_302_FOUND,
     summary="Root to docs redirect",
     description="This endpoint redirects the root path of the API to the documentation.",
+    include_in_schema=False,
 )
 def root_to_docs_redirect():
     """
@@ -24,3 +25,9 @@ def root_to_docs_redirect():
         RedirectResponse: A redirect response object that redirects to /docs.
     """
     return RedirectResponse(url="/docs")
+
+
+@router.get("/robots.txt", response_class=PlainTextResponse, include_in_schema=False)
+def robots():
+    data = """User-agent: *\nDisallow: /"""
+    return data

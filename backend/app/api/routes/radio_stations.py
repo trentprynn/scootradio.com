@@ -14,7 +14,7 @@ router = APIRouter(
 @router.get("")
 def read_all_radio_stations(session: SessionDep) -> list[RadioStationDTO]:
     """
-    Get radio station by name.
+    Read all radio stations.
     """
 
     find_stations_statement = select(RadioStationModel)
@@ -33,7 +33,7 @@ def read_all_radio_stations(session: SessionDep) -> list[RadioStationDTO]:
 @router.get("/{name}", response_model=RadioStationDTO)
 def read_radio_station(session: SessionDep, name: str) -> RadioStationDTO:
     """
-    Get radio station by name.
+    Read a single radio station by name.
     """
 
     find_station_statement = select(RadioStationModel).filter_by(name=name)
