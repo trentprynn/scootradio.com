@@ -75,7 +75,7 @@ const AboutPopover = () => {
 
     return (
         <Stack direction={'row'} spacing={4}>
-            <Popover trigger={trigger}>
+            <Popover trigger={trigger} placement={'bottom-start'}>
                 <PopoverTrigger>
                     <Button variant={'ghost'} size="sm">
                         About
