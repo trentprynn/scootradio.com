@@ -1,4 +1,8 @@
+import logging
 import subprocess
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def main():
@@ -6,9 +10,9 @@ def main():
         ["mypy", "."], check=False, capture_output=True, text=True
     )
     if mypy_result.returncode != 0:
-        print("Mypy errors:")
-        print(mypy_result.stdout)
-        print(mypy_result.stderr)
+        logger.error("Mypy errors:")
+        logger.error(mypy_result.stdout)
+        logger.error(mypy_result.stderr)
         return
 
     ruff_lint = subprocess.run(
@@ -21,9 +25,9 @@ def main():
         text=True,
     )
     if ruff_lint.returncode != 0:
-        print("Ruff lint errors:")
-        print(ruff_lint.stdout)
-        print(ruff_lint.stderr)
+        logger.error("Ruff lint errors:")
+        logger.error(ruff_lint.stdout)
+        logger.error(ruff_lint.stderr)
         return
 
     ruff_format = subprocess.run(
@@ -36,9 +40,9 @@ def main():
         text=True,
     )
     if ruff_format.returncode != 0:
-        print("Ruff format errors:")
-        print(ruff_format.stdout)
-        print(ruff_format.stderr)
+        logger.error("Ruff format errors:")
+        logger.error(ruff_format.stdout)
+        logger.error(ruff_format.stderr)
         return
 
 

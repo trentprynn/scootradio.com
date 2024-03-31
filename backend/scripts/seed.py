@@ -1,7 +1,12 @@
+import logging
 from sqlalchemy.sql import select
 from app.core.db import engine
 from sqlalchemy.orm import Session
 from app.models.radio_station import RadioStationModel
+from .prestart import prestart
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 seed_radio_stations: list[RadioStationModel] = [
     RadioStationModel(
@@ -29,7 +34,8 @@ seed_radio_stations: list[RadioStationModel] = [
 
 
 def seed():
-    print("Running seed")
+    prestart()
+    logger.info("seeding...")
     with Session(engine) as session:
         for seed_radio_station in seed_radio_stations:
             find_seed_statement = select(RadioStationModel).filter_by(
@@ -39,10 +45,10 @@ def seed():
             existing_seed_station = session.scalars(find_seed_statement).first()
 
             if existing_seed_station and existing_seed_station == seed_radio_station:
-                print(f"{seed_radio_station.name} up to date, skipping")
+                logger.info(f"{seed_radio_station.name} up to date, skipping")
                 continue
 
-            print(f"inserting / updating {seed_radio_station.name}")
+            logger.info(f"inserting / updating {seed_radio_station.name}")
             session.merge(seed_radio_station)
 
         session.commit()
