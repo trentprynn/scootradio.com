@@ -4,7 +4,6 @@ import { Providers } from '@/components/core/providers/providers'
 import { CurrentlyPlayingBox } from '@/components/radio-station/currently-playing/currently-playing-box'
 import { Spacer } from '@chakra-ui/react'
 import type { Metadata } from 'next'
-import Script from 'next/script'
 
 export const metadata: Metadata = {
     title: 'scootradio.com',
@@ -42,7 +41,7 @@ export default function RootLayout({
                 </Providers>
             </body>
             {process.env.NODE_ENV === 'production' && (
-                <Script async defer data-collect-dnt="true" src="https://sa.scootradio.com/latest.js" />
+                <script async defer data-collect-dnt="true" src="https://sa.scootradio.com/latest.js"></script>
             )}
         </html>
     )
