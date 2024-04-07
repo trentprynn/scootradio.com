@@ -26,13 +26,8 @@ async def lifespan(_: FastAPI):
     # startup events
     log.info("FastAPI application starting up")
 
-    log.info("verifying database connection")
     wait_db()
-
-    log.info("running migrations")
     migrate()
-
-    log.info("running seed")
     seed()
 
     yield
