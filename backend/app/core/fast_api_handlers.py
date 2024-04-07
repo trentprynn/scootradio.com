@@ -1,3 +1,4 @@
+import structlog
 import traceback
 from fastapi import FastAPI, Request
 from contextlib import asynccontextmanager
@@ -5,7 +6,7 @@ from fastapi.responses import JSONResponse
 from scripts.wait_db import wait_db
 from scripts.migrate import migrate
 from scripts.seed import seed
-import structlog
+
 
 log = structlog.get_logger()
 

@@ -1,6 +1,6 @@
+import structlog
 import subprocess
 
-import structlog
 
 log = structlog.get_logger()
 

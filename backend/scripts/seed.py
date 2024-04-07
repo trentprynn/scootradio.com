@@ -1,3 +1,4 @@
+import structlog
 from sqlalchemy.sql import select
 from app.core.db import engine
 from sqlalchemy.orm import Session
@@ -6,7 +7,6 @@ from app.core.config import settings
 from app.enums.radio_station_playlist_type import RadioStationPlaylistType
 from .wait_db import wait_db
 
-import structlog
 
 log = structlog.get_logger()
 

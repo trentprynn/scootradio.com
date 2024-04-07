@@ -1,7 +1,7 @@
+import structlog
 import subprocess
 from .wait_db import wait_db
 
-import structlog
 
 log = structlog.get_logger()
 

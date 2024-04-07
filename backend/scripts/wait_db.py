@@ -1,10 +1,9 @@
+import structlog
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 from tenacity import retry, stop_after_attempt, wait_fixed
 
 from app.core.db import engine
-
-import structlog
 
 log = structlog.get_logger()
 
