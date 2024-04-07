@@ -1,22 +1,22 @@
-import logging
 import subprocess
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+import structlog
+
+log = structlog.get_logger()
 
 
 def main():
-    logger.info("running mypy")
+    log.info("running mypy")
     mypy_result = subprocess.run(
         ["mypy", "."], check=False, capture_output=True, text=True
     )
     if mypy_result.returncode != 0:
-        logger.error("Mypy errors:")
-        logger.error(mypy_result.stdout)
-        logger.error(mypy_result.stderr)
+        log.error("Mypy errors:")
+        log.error(mypy_result.stdout)
+        log.error(mypy_result.stderr)
         return
 
-    logger.info("running ruff lint")
+    log.info("running ruff lint")
     ruff_lint = subprocess.run(
         [
             "ruff",
@@ -27,12 +27,12 @@ def main():
         text=True,
     )
     if ruff_lint.returncode != 0:
-        logger.error("Ruff lint errors:")
-        logger.error(ruff_lint.stdout)
-        logger.error(ruff_lint.stderr)
+        log.error("Ruff lint errors:")
+        log.error(ruff_lint.stdout)
+        log.error(ruff_lint.stderr)
         return
 
-    logger.info("running ruff format")
+    log.info("running ruff format")
     ruff_format = subprocess.run(
         [
             "ruff",
@@ -43,9 +43,9 @@ def main():
         text=True,
     )
     if ruff_format.returncode != 0:
-        logger.error("Ruff format errors:")
-        logger.error(ruff_format.stdout)
-        logger.error(ruff_format.stderr)
+        log.error("Ruff format errors:")
+        log.error(ruff_format.stdout)
+        log.error(ruff_format.stderr)
         return
 
 

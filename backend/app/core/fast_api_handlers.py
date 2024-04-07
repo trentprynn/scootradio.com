@@ -1,4 +1,3 @@
-import logging
 import traceback
 from fastapi import FastAPI, Request
 from contextlib import asynccontextmanager
@@ -6,9 +5,9 @@ from fastapi.responses import JSONResponse
 from scripts.wait_db import wait_db
 from scripts.migrate import migrate
 from scripts.seed import seed
+import structlog
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+log = structlog.get_logger()
 
 
 @asynccontextmanager
@@ -24,21 +23,21 @@ async def lifespan(_: FastAPI):
         _: FastAPI instance. It's not used in this function, hence the underscore.
     """
     # startup events
-    logger.info("FastAPI application starting up")
+    log.info("FastAPI application starting up")
 
-    logger.info("verifying database connection")
+    log.info("verifying database connection")
     wait_db()
 
-    logger.info("calling migrations")
+    log.info("running migrations")
     migrate()
 
-    logger.error("calling seed")
+    log.info("running seed")
     seed()
 
     yield
 
     # shutdown events
-    logger.info("shutting down")
+    log.info("shutting down")
 
 
 async def exception_handler(_: Request, exc: Exception):
@@ -54,8 +53,8 @@ async def exception_handler(_: Request, exc: Exception):
     Returns:
         JSONResponse: A JSON response with a status code of 500 and a message indicating an error occurred.
     """
-    logger.error(f"An error occurred: {exc}")
-    logger.error(traceback.format_exc())
+    log.error(f"An error occurred: {exc}")
+    log.error(traceback.format_exc())
 
     return JSONResponse(
         status_code=500,

@@ -1,4 +1,3 @@
-import logging
 from sqlalchemy.sql import select
 from app.core.db import engine
 from sqlalchemy.orm import Session
@@ -7,8 +6,9 @@ from app.core.config import settings
 from app.enums.radio_station_playlist_type import RadioStationPlaylistType
 from .wait_db import wait_db
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+import structlog
+
+log = structlog.get_logger()
 
 seed_radio_stations: list[RadioStationModel] = [
     RadioStationModel(
@@ -42,7 +42,7 @@ seed_radio_stations: list[RadioStationModel] = [
 
 
 def seed():
-    logger.info("running seed")
+    log.info("running seed")
     with Session(engine) as session:
         for seed_radio_station in seed_radio_stations:
             find_station_statement = select(RadioStationModel).filter_by(
@@ -52,14 +52,14 @@ def seed():
             existing_seed_station = session.scalars(find_station_statement).first()
 
             if existing_seed_station and existing_seed_station == seed_radio_station:
-                logger.info(f"{seed_radio_station.name} up to date, skipping")
+                log.info(f"{seed_radio_station.name} up to date, skipping")
                 continue
 
-            logger.info(f"inserting / updating {seed_radio_station.name}")
+            log.info(f"inserting / updating {seed_radio_station.name}")
             session.merge(seed_radio_station)
 
         session.commit()
-    logger.info("seed complete")
+    log.info("seed complete")
 
 
 def main():
