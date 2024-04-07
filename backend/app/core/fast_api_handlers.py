@@ -3,6 +3,7 @@ import traceback
 from fastapi import FastAPI, Request
 from contextlib import asynccontextmanager
 from fastapi.responses import JSONResponse
+from scripts.wait_db import wait_db
 from scripts.migrate import migrate
 from scripts.seed import seed
 
@@ -23,8 +24,15 @@ async def lifespan(_: FastAPI):
         _: FastAPI instance. It's not used in this function, hence the underscore.
     """
     # startup events
-    logger.info("starting up")
+    logger.info("FastAPI application starting up")
+
+    logger.info("verifying database connection")
+    wait_db()
+
+    logger.info("calling migrations")
     migrate()
+
+    logger.error("calling seed")
     seed()
 
     yield

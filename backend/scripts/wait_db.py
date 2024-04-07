@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
     stop=stop_after_attempt(5),
     wait=wait_fixed(3),
 )
-def prestart() -> None:
+def wait_db() -> None:
     logger.info("attempting to connect to database...")
     try:
         with Session(engine) as session:
@@ -25,7 +25,7 @@ def prestart() -> None:
 
 
 def main():
-    prestart()
+    wait_db()
 
 
 if __name__ == "__main__":

@@ -12,9 +12,6 @@ start: install
 lint: install
 	poetry run lint
 
-prestart: install
-	poetry run prestart
-
 create-migration: install
 	poetry run create-migration
 

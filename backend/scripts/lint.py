@@ -6,6 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 def main():
+    logger.info("running mypy")
     mypy_result = subprocess.run(
         ["mypy", "."], check=False, capture_output=True, text=True
     )
@@ -15,6 +16,7 @@ def main():
         logger.error(mypy_result.stderr)
         return
 
+    logger.info("running ruff lint")
     ruff_lint = subprocess.run(
         [
             "ruff",
@@ -30,6 +32,7 @@ def main():
         logger.error(ruff_lint.stderr)
         return
 
+    logger.info("running ruff format")
     ruff_format = subprocess.run(
         [
             "ruff",

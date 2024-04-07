@@ -8,7 +8,6 @@ readme = "README.md"
 [tool.poetry.scripts]
 start = "scripts.start:main"
 lint = "scripts.lint:main"
-prestart = "scripts.prestart:main"
 create-migration = "scripts.create_migration:main"
 migrate = "scripts.migrate:main"
 seed = "scripts.seed:main"

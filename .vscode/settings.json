@@ -4,10 +4,12 @@
         "fastapi",
         "kexp",
         "kxci",
+        "kxlu",
         "Marymount",
         "PGHOST",
         "prestart",
         "pydantic",
+        "SPINITRON",
         "SQLALCHEMY",
         "sqlmodel"
     ]
