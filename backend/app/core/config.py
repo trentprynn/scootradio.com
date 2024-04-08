@@ -23,8 +23,7 @@ class Settings(BaseSettings):
     PGUSER: str
     PGPASSWORD: str
 
-    REDISHOST: str
-    REDISPORT: int
+    REDIS_URL: str
 
     @computed_field  # type: ignore[misc]
     @property

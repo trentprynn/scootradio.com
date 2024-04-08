@@ -16,12 +16,7 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 
 def get_cache() -> Cache:
-    cache = Cache(
-        Cache.REDIS,
-        endpoint=settings.REDISHOST,
-        port=settings.REDISPORT,
-        namespace="scootradio_backend",
-    )
+    cache = Cache.from_url(settings.REDIS_URL)
     return cache
 
 
