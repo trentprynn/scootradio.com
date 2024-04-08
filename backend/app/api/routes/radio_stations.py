@@ -1,8 +1,14 @@
-from app.api.dependencies import SessionDep, get_session
+from app.utils.spinitron_scraping import get_now_playing_via_spinitron
+import structlog
+from app.api.dependencies import CacheDep, SessionDep, get_session
+from app.dtos.now_playing import NowPlayingDTO
+from app.enums.radio_station_playlist_type import RadioStationPlaylistType
 from fastapi import APIRouter, Depends, HTTPException
 from app.models.radio_station import RadioStationModel
 from app.dtos.radio_station import RadioStationDTO
 from sqlalchemy import select
+
+log = structlog.get_logger()
 
 router = APIRouter(
     prefix="/radio-stations",
@@ -30,7 +36,7 @@ def read_all_radio_stations(session: SessionDep) -> list[RadioStationDTO]:
     ]
 
 
-@router.get("/{name}", response_model=RadioStationDTO)
+@router.get("/{name}")
 def read_radio_station(session: SessionDep, name: str) -> RadioStationDTO:
     """
     Read a single radio station by name.
@@ -44,3 +50,33 @@ def read_radio_station(session: SessionDep, name: str) -> RadioStationDTO:
         raise HTTPException(status_code=404, detail=f"Station {name} was not found")
 
     return RadioStationDTO.from_orm(radio_station_model)
+
+
+@router.get("/{name}/now-playing")
+async def read_radio_station_now_playing(
+    session: SessionDep, cache: CacheDep, name: str
+) -> NowPlayingDTO | None:
+    now_playing_cache = await cache.get(f"${name}-now-playing")
+    if now_playing_cache:
+        now_playing_cache_dto = NowPlayingDTO(**now_playing_cache)
+        return now_playing_cache_dto
+
+    find_station_statement = select(RadioStationModel).filter_by(name=name)
+
+    radio_station_model = session.scalars(find_station_statement).first()
+
+    if radio_station_model is None:
+        raise HTTPException(status_code=404, detail=f"Station {name} was not found")
+
+    if radio_station_model.playlist_type != RadioStationPlaylistType.SPINITRON:
+        return None
+
+    if radio_station_model.playlist_url is None:
+        return None
+
+    now_playing = get_now_playing_via_spinitron(radio_station_model.playlist_url)
+    if now_playing:
+        await cache.set(f"${name}-now-playing", now_playing.model_dump(), ttl=10)
+        return now_playing
+    else:
+        return None

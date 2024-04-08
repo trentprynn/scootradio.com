@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     PGUSER: str
     PGPASSWORD: str
 
+    REDISHOST: str
+    REDISPORT: int
+
     @computed_field  # type: ignore[misc]
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:

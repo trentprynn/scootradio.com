@@ -1,7 +1,8 @@
 'use client'
 
+import { useRadioStationNowPlaying } from '@/api/radio-stations/react-queries/use-radio-station-now-playing'
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
-import { Box, Container, IconButton, Spinner, Stack, Text, useColorModeValue } from '@chakra-ui/react'
+import { Box, Container, Flex, IconButton, Spinner, Stack, Text, Tooltip, useColorModeValue } from '@chakra-ui/react'
 import lodash from 'lodash'
 import { useEffect, useRef, useState } from 'react'
 import { FaPause, FaPlay } from 'react-icons/fa'
@@ -11,6 +12,8 @@ export function CurrentlyPlayingBox() {
     const { currentStation, isPlaying, setIsPlaying } = useRadioPlayerState()
 
     const [loading, setLoading] = useState(false)
+
+    const { data: nowPlaying } = useRadioStationNowPlaying(currentStation ? currentStation.name : null)
 
     const lastStationRef = useRef(currentStation)
     useEffect(() => {
@@ -31,26 +34,49 @@ export function CurrentlyPlayingBox() {
 
     return (
         <>
-            <Box position="sticky" bottom="0" width="100%" backgroundColor={bgColor} p={4} zIndex="sticky">
-                <Container>
-                    <Stack direction={'row'} justifyContent={'space-between'}>
-                        <Box>
-                            <Text fontSize={'large'}>Now Playing</Text>
-                            <Text>{currentStation.display_name}</Text>
-                        </Box>
+            <Box position="sticky" bottom="0" width="100%" backgroundColor={bgColor} zIndex="sticky">
+                <Container sx={{ height: '80px', overflow: 'hidden' }}>
+                    <Flex gridGap={6} justifyContent={'space-between'} height={'100%'}>
+                        <Flex direction={'column'} justifyContent={'center'}>
+                            <Box>
+                                <Text fontSize={'lg'} fontWeight={'bold'}>
+                                    Now Playing
+                                </Text>
+                                <Text fontSize={'lg'} color="gray.500">
+                                    {currentStation.display_name}
+                                </Text>
+                            </Box>
+                        </Flex>
+                        {!loading && nowPlaying && (
+                            <Flex flex="1" direction={'column'} justifyContent={'center'}>
+                                <Text fontSize={'md'} color="gray.500" fontWeight={'semibold'} noOfLines={1}>
+                                    {nowPlaying.artist_name}
+                                </Text>
+                                <Tooltip label={`${nowPlaying.song_name} - ${nowPlaying.album_name}`}>
+                                    <Text fontSize={'sm'} color="gray.500" noOfLines={1}>
+                                        {nowPlaying.song_name} - {nowPlaying.album_name}
+                                    </Text>
+                                </Tooltip>
 
-                        {loading ? (
-                            <Stack direction={'row'} alignItems={'center'}>
-                                <Spinner size="md" />
-                            </Stack>
-                        ) : (
-                            <IconButton
-                                aria-label="Play pause button"
-                                icon={isPlaying ? <FaPause /> : <FaPlay />}
-                                onClick={() => setIsPlaying(!isPlaying)}
-                            />
+                                <Text fontSize={'sm'} color="gray.500" noOfLines={1}>
+                                    {nowPlaying.play_time}
+                                </Text>
+                            </Flex>
                         )}
-                    </Stack>
+                        <Flex direction={'column'} justifyContent={'center'}>
+                            {loading ? (
+                                <Stack direction={'row'} alignItems={'center'}>
+                                    <Spinner size="md" />
+                                </Stack>
+                            ) : (
+                                <IconButton
+                                    aria-label="Play pause button"
+                                    icon={isPlaying ? <FaPause /> : <FaPlay />}
+                                    onClick={() => setIsPlaying(!isPlaying)}
+                                />
+                            )}
+                        </Flex>
+                    </Flex>
                 </Container>
             </Box>
 

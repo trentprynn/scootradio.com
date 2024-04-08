@@ -30,10 +30,12 @@ async def lifespan(_: FastAPI):
     migrate()
     seed()
 
+    log.info("FastAPI application startup complete")
+
     yield
 
     # shutdown events
-    log.info("shutting down")
+    log.info("FastAPI application shutting down")
 
 
 async def exception_handler(_: Request, exc: Exception):
