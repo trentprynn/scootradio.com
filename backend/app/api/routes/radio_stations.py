@@ -1,3 +1,4 @@
+from app.utils.kexp_scraping import get_now_playing_via_kexp
 from app.utils.spinitron_scraping import get_now_playing_via_spinitron
 import structlog
 from app.api.dependencies import CacheDep, SessionDep, get_session
@@ -68,15 +69,22 @@ async def read_radio_station_now_playing(
     if radio_station_model is None:
         raise HTTPException(status_code=404, detail=f"Station {name} was not found")
 
-    if radio_station_model.playlist_type != RadioStationPlaylistType.SPINITRON:
+    if radio_station_model.playlist_type is None:
         return None
 
-    if radio_station_model.playlist_url is None:
-        return None
+    now_playing: NowPlayingDTO | None = None
 
-    now_playing = get_now_playing_via_spinitron(radio_station_model.playlist_url)
-    if now_playing:
-        await cache.set(f"${name}-now-playing", now_playing.model_dump(), ttl=10)
-        return now_playing
+    if radio_station_model.playlist_type == RadioStationPlaylistType.SPINITRON:
+        if radio_station_model.playlist_url is None:
+            return None
+        now_playing = get_now_playing_via_spinitron(radio_station_model.playlist_url)
+    elif radio_station_model.playlist_type == RadioStationPlaylistType.KEXP:
+        now_playing = get_now_playing_via_kexp()
     else:
+        pass
+
+    if now_playing is None:
         return None
+
+    await cache.set(f"${name}-now-playing", now_playing.model_dump(), ttl=1)
+    return now_playing

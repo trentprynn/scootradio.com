@@ -27,6 +27,7 @@ structlog = "^24.1.0"
 beautifulsoup4 = "^4.12.3"
 requests = "^2.31.0"
 redis = "^5.0.3"
+pendulum = "^3.0.0"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.8.0"

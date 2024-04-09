@@ -40,9 +40,9 @@ def get_now_playing_via_spinitron(station_url: str) -> NowPlayingDTO | None:
 
     thumbnail_tag = soup.find("div", class_="spin-art-container")
     if isinstance(thumbnail_tag, Tag) and thumbnail_tag.img:
-        thumbnail_src = thumbnail_tag.img.get("src")  # Use .get to safely access 'src'
+        thumbnail_src = thumbnail_tag.img.get("src")
         if isinstance(thumbnail_src, str):
-            thumbnail = thumbnail_src  # Only assign if it's a string
+            thumbnail = thumbnail_src
 
     return NowPlayingDTO(
         song_name=song,

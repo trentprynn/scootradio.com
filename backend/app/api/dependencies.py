@@ -15,9 +15,12 @@ def get_session() -> Generator[Session, None, None]:
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
-def get_cache() -> Cache:
+async def get_cache() -> Cache:
     cache = Cache.from_url(settings.REDIS_URL)
-    return cache
+    try:
+        yield cache
+    finally:
+        await cache.close()
 
 
 CacheDep = Annotated[Cache, Depends(get_cache)]
