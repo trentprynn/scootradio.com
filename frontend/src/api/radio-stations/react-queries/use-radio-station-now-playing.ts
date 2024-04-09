@@ -13,7 +13,9 @@ export const useRadioStationNowPlaying = (stationName: string | null) => {
 
             return radioStationAPI.fetchRadioStationNowPlaying(stationName!)
         },
-        refetchInterval: 10000, // Refetch every 10 seconds
+        refetchInterval: 10000, // 10 seconds
+        refetchOnWindowFocus: true,
+        refetchIntervalInBackground: true,
         enabled: !!stationName,
     })
 }

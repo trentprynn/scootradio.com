@@ -4,6 +4,7 @@ import { useRadioStationNowPlaying } from '@/api/radio-stations/react-queries/us
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
 import { Box, Container, Flex, IconButton, Spinner, Stack, Text, Tooltip, useColorModeValue } from '@chakra-ui/react'
 import lodash from 'lodash'
+import mime from 'mime'
 import { useEffect, useRef, useState } from 'react'
 import { FaPause, FaPlay } from 'react-icons/fa'
 import ReactPlayer from 'react-player'
@@ -14,6 +15,42 @@ export function CurrentlyPlayingBox() {
     const [loading, setLoading] = useState(false)
 
     const { data: nowPlaying } = useRadioStationNowPlaying(currentStation ? currentStation.name : null)
+
+    const lastNowPlayingRef = useRef(nowPlaying)
+    useEffect(() => {
+        // the purpose of this effect is to watch changes to nowPlaying and
+        // update the media session api with the new info
+
+        if ('mediaSession' in navigator === false) {
+            return
+        }
+
+        if (lodash.isEqual(nowPlaying, lastNowPlayingRef.current)) {
+            return
+        }
+
+        lastNowPlayingRef.current = nowPlaying
+
+        if (!nowPlaying) {
+            navigator.mediaSession.metadata = null
+            return
+        }
+
+        let artwork: MediaImage[] | undefined = undefined
+        if (nowPlaying.thumbnail_url) {
+            const thumbnailMimeType = mime.getType(nowPlaying.thumbnail_url)
+            if (thumbnailMimeType) {
+                artwork = [{ src: nowPlaying.thumbnail_url, sizes: '96x96', type: thumbnailMimeType }]
+            }
+        }
+
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: nowPlaying.song_name,
+            artist: nowPlaying.artist_name,
+            album: nowPlaying.album_name,
+            artwork: artwork,
+        })
+    }, [nowPlaying])
 
     const lastStationRef = useRef(currentStation)
     useEffect(() => {
@@ -50,11 +87,11 @@ export function CurrentlyPlayingBox() {
                         {!loading && nowPlaying && (
                             <Flex flex="1" direction={'column'} justifyContent={'center'}>
                                 <Text fontSize={'md'} color="gray.500" fontWeight={'semibold'} noOfLines={1}>
-                                    {nowPlaying.artist_name}
+                                    {nowPlaying.song_name}
                                 </Text>
                                 <Tooltip label={`${nowPlaying.song_name} - ${nowPlaying.album_name}`}>
                                     <Text fontSize={'sm'} color="gray.500" noOfLines={1}>
-                                        {nowPlaying.song_name} - {nowPlaying.album_name}
+                                        {nowPlaying.artist_name} - {nowPlaying.album_name}
                                     </Text>
                                 </Tooltip>
 
