@@ -8,10 +8,10 @@ import {
     Flex,
     IconButton,
     SlideFade,
+    Spacer,
     Spinner,
     Stack,
     Text,
-    Tooltip,
     useColorModeValue,
 } from '@chakra-ui/react'
 import lodash from 'lodash'
@@ -91,12 +91,18 @@ export function StationPlayer() {
                         sx={{
                             height: '80px',
                             overflow: 'hidden',
-                            width: '100%',
-                            backgroundColor: bgColor,
-                            borderRadius: '8px',
                         }}
                     >
-                        <Flex gridGap={6} justifyContent={'space-between'} height={'100%'}>
+                        <Flex
+                            height={'100%'}
+                            gap={4}
+                            sx={{
+                                px: 4,
+                                height: '100%',
+                                backgroundColor: bgColor,
+                                borderRadius: '8px',
+                            }}
+                        >
                             <Flex direction={'column'} justifyContent={'center'}>
                                 <Box>
                                     <Text fontSize={'lg'} fontWeight={'bold'}>
@@ -108,21 +114,21 @@ export function StationPlayer() {
                                 </Box>
                             </Flex>
                             {!loading && nowPlaying && (
-                                <Flex flex="1" direction={'column'} justifyContent={'center'}>
+                                <Flex direction={'column'} justifyContent={'center'}>
                                     <Text fontSize={'md'} color="gray.500" fontWeight={'semibold'} noOfLines={1}>
                                         {nowPlaying.song_name}
                                     </Text>
-                                    <Tooltip label={`${nowPlaying.song_name} - ${nowPlaying.album_name}`}>
-                                        <Text fontSize={'sm'} color="gray.500" noOfLines={1}>
-                                            {nowPlaying.artist_name} - {nowPlaying.album_name}
-                                        </Text>
-                                    </Tooltip>
+                                    <Text fontSize={'sm'} color="gray.500" noOfLines={1}>
+                                        {nowPlaying.artist_name} - {nowPlaying.album_name}
+                                    </Text>
 
                                     <Text fontSize={'sm'} color="gray.500" noOfLines={1}>
                                         {nowPlaying.play_time}
                                     </Text>
                                 </Flex>
                             )}
+
+                            <Spacer />
 
                             <Flex direction={'column'} justifyContent={'center'}>
                                 {loading ? (

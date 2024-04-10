@@ -2,8 +2,10 @@
 
 import { RadioStation } from '@/api/radio-stations/types/radio-station.type'
 import { AnimatedWave } from '@/components/animations/animated-wave'
+import { useFavoriteStationsState } from '@/global-state/favorite-stations-state'
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
-import { Box, Button, Divider, Flex, Image, Spacer, Text } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, HStack, IconButton, Image, Spacer, Text, Tooltip } from '@chakra-ui/react'
+import { FaRegStar, FaStar } from 'react-icons/fa6'
 
 type StationDisplayProps = {
     radioStation: RadioStation
@@ -12,10 +14,40 @@ type StationDisplayProps = {
 export function StationDisplay({ radioStation }: StationDisplayProps) {
     const { currentStation, setIsPlaying, playStation, isPlaying } = useRadioPlayerState()
 
+    const { favoriteStationNames, addFavoriteStation, removeFavoriteStation } = useFavoriteStationsState()
+
     return (
         <Box>
             <Flex gap={2} alignItems={'center'}>
-                <Text fontSize="xl">{radioStation.display_name}</Text>
+                <HStack spacing={4}>
+                    <Text fontSize="xl">{radioStation.display_name}</Text>
+                    {favoriteStationNames.includes(radioStation.name) ? (
+                        <Tooltip aria-label={`Remove ${radioStation.display_name} from favorite stations`}>
+                            <IconButton
+                                variant={'text'}
+                                size={'small'}
+                                aria-label={`Remove ${radioStation.display_name} from favorite stations`}
+                                icon={<FaStar />}
+                                onClick={() => {
+                                    removeFavoriteStation(radioStation.name)
+                                }}
+                            />
+                        </Tooltip>
+                    ) : (
+                        <Tooltip aria-label={`Add ${radioStation.display_name} as a favorite station`}>
+                            <IconButton
+                                variant={'text'}
+                                size={'small'}
+                                aria-label={`Add ${radioStation.display_name} as a favorite station`}
+                                icon={<FaRegStar />}
+                                onClick={() => {
+                                    addFavoriteStation(radioStation.name)
+                                }}
+                            />
+                        </Tooltip>
+                    )}
+                </HStack>
+
                 <Spacer />
                 <Image width={100} src={radioStation.image_url} alt={radioStation.display_name} />
             </Flex>
