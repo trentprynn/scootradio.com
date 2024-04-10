@@ -25,7 +25,8 @@
     "react-use": "^17.5.0",
     "zod": "^3.22.4",
     "zustand": "^4.5.2",
-    "mime": "^4.0.1"
+    "mime": "^4.0.1",
+    "react-flip-move": "^3.0.5"
   },
   "devDependencies": {
     "@types/node": "^20",
