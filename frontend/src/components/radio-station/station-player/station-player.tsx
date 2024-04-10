@@ -2,18 +2,7 @@
 
 import { useRadioStationNowPlaying } from '@/api/radio-stations/react-queries/use-radio-station-now-playing'
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
-import {
-    Box,
-    Container,
-    Flex,
-    IconButton,
-    SlideFade,
-    Spacer,
-    Spinner,
-    Stack,
-    Text,
-    useColorModeValue,
-} from '@chakra-ui/react'
+import { Box, Container, Flex, IconButton, SlideFade, Spinner, Stack, Text, useColorModeValue } from '@chakra-ui/react'
 import lodash from 'lodash'
 import mime from 'mime'
 import { useEffect, useRef, useState } from 'react'
@@ -113,22 +102,23 @@ export function StationPlayer() {
                                     </Text>
                                 </Box>
                             </Flex>
-                            {!loading && nowPlaying && (
-                                <Flex direction={'column'} justifyContent={'center'}>
-                                    <Text fontSize={'md'} color="gray.500" fontWeight={'semibold'} noOfLines={1}>
-                                        {nowPlaying.song_name}
-                                    </Text>
-                                    <Text fontSize={'sm'} color="gray.500" noOfLines={1}>
-                                        {nowPlaying.artist_name} - {nowPlaying.album_name}
-                                    </Text>
 
-                                    <Text fontSize={'sm'} color="gray.500" noOfLines={1}>
-                                        {nowPlaying.play_time}
-                                    </Text>
-                                </Flex>
-                            )}
+                            <Flex flex="1" direction={'column'} justifyContent={'center'}>
+                                {!loading && nowPlaying && (
+                                    <>
+                                        <Text fontSize={'md'} color="gray.500" fontWeight={'semibold'} noOfLines={1}>
+                                            {nowPlaying.song_name}
+                                        </Text>
+                                        <Text fontSize={'sm'} color="gray.500" noOfLines={1}>
+                                            {nowPlaying.artist_name} - {nowPlaying.album_name}
+                                        </Text>
 
-                            <Spacer />
+                                        <Text fontSize={'sm'} color="gray.500" noOfLines={1}>
+                                            {nowPlaying.play_time}
+                                        </Text>
+                                    </>
+                                )}
+                            </Flex>
 
                             <Flex direction={'column'} justifyContent={'center'}>
                                 {loading ? (
