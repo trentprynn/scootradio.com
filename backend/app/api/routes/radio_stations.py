@@ -86,5 +86,5 @@ async def read_radio_station_now_playing(
     if now_playing is None:
         return None
 
-    await cache.set(f"${name}-now-playing", now_playing.model_dump(), ttl=1)
+    await cache.set(f"${name}-now-playing", now_playing.model_dump(), ttl=10)
     return now_playing

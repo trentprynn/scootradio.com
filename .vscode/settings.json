@@ -17,6 +17,7 @@
         "REDISPORT",
         "SPINITRON",
         "SQLALCHEMY",
-        "sqlmodel"
+        "sqlmodel",
+        "zustand"
     ]
 }

@@ -1,7 +1,7 @@
 import { NavBar } from '@/components/core/layout/nav-bar'
 import { VH100Box } from '@/components/core/layout/vh-100-box'
 import { Providers } from '@/components/core/providers/providers'
-import { CurrentlyPlayingBox } from '@/components/radio-station/currently-playing/currently-playing-box'
+import { StationPlayer } from '@/components/radio-station/station-player/station-player'
 import { Spacer } from '@chakra-ui/react'
 import type { Metadata } from 'next'
 
@@ -36,7 +36,7 @@ export default function RootLayout({
                         <NavBar />
                         {children}
                         <Spacer />
-                        <CurrentlyPlayingBox />
+                        <StationPlayer />
                     </VH100Box>
                 </Providers>
             </body>

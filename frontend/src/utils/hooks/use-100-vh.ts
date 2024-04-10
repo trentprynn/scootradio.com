@@ -10,7 +10,7 @@ export const use100vh = () => {
         if (typeof window !== 'undefined') {
             setVh100px(window.innerHeight)
         }
-    }, 25)
+    }, 5)
 
     useLayoutEffect(() => {
         if (typeof window !== 'undefined') {
