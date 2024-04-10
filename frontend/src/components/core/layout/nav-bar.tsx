@@ -5,7 +5,9 @@ import {
     Box,
     Button,
     Flex,
+    HStack,
     Icon,
+    IconButton,
     Image,
     Popover,
     PopoverContent,
@@ -15,12 +17,15 @@ import {
     Text,
     Tooltip,
     useBreakpointValue,
+    useColorMode,
     useColorModeValue,
 } from '@chakra-ui/react'
-import { FaChevronRight } from 'react-icons/fa6'
+import { FaChevronRight, FaMoon, FaSun } from 'react-icons/fa6'
 import { IoLogoVenmo } from 'react-icons/io5'
 
 export function NavBar() {
+    const { colorMode, toggleColorMode } = useColorMode()
+
     return (
         <Box>
             <Flex
@@ -42,19 +47,34 @@ export function NavBar() {
 
                 <Spacer />
 
-                <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'}>
+                <HStack gap={1}>
+                    <Tooltip label={colorMode === 'light' ? 'Dark mode' : 'Light mode'}>
+                        <IconButton
+                            variant={'ghost'}
+                            size="lg"
+                            aria-label={`Toggle light/dark color theme`}
+                            icon={colorMode === 'light' ? <FaSun size={'24px'} /> : <FaMoon size={'24px'} />}
+                            onClick={() => {
+                                toggleColorMode()
+                            }}
+                        />
+                    </Tooltip>
+
                     <Tooltip label={'Tip me?'}>
-                        <Link
-                            href="https://venmo.com/u/TrentPrynn"
-                            target="_blank"
-                            color="blue.400"
-                            _hover={{ color: 'blue.500' }}
-                            pt={2}
-                        >
-                            <Icon as={IoLogoVenmo} w={'32px'} h={'32px'} />
+                        <Link href="https://venmo.com/u/TrentPrynn" target="_blank">
+                            <IconButton
+                                variant={'ghost'}
+                                size="lg"
+                                aria-label={`Tip the creator of scootradio.com`}
+                                icon={<IoLogoVenmo size={'32px'} />}
+                                color="blue.400"
+                                onClick={() => {
+                                    toggleColorMode()
+                                }}
+                            />
                         </Link>
                     </Tooltip>
-                </Stack>
+                </HStack>
             </Flex>
         </Box>
     )
