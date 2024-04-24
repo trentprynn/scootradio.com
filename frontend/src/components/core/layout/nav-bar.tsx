@@ -53,7 +53,7 @@ export function NavBar() {
                             variant={'ghost'}
                             size="lg"
                             aria-label={`Toggle light/dark color theme`}
-                            icon={colorMode === 'light' ? <FaSun size={'24px'} /> : <FaMoon size={'24px'} />}
+                            icon={colorMode === 'light' ? <FaMoon size={'24px'} /> : <FaSun size={'24px'} />}
                             onClick={() => {
                                 toggleColorMode()
                             }}

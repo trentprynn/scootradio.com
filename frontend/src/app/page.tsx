@@ -8,7 +8,7 @@ import { StationDisplay } from '@/components/radio-station/station-display/stati
 import { useFavoriteStationsState } from '@/global-state/favorite-stations-state'
 import { getErrorMessage } from '@/utils/functions/error-handling-utils'
 import { Box } from '@chakra-ui/react'
-import FlipMove from 'react-flip-move'
+import { Flipped, Flipper } from 'react-flip-toolkit'
 
 export default function Home() {
     const {
@@ -47,13 +47,15 @@ export default function Home() {
 
     return (
         <StandardPageWrapper>
-            <FlipMove>
+            <Flipper flipKey={sortedRadioStations.map((s) => s.name).join('')}>
                 {sortedRadioStations.map((radioStation) => (
-                    <Box key={radioStation.name} mb={4}>
-                        <StationDisplay radioStation={radioStation} />
-                    </Box>
+                    <Flipped key={radioStation.name} flipId={radioStation.name}>
+                        <Box mb={4}>
+                            <StationDisplay radioStation={radioStation} />
+                        </Box>
+                    </Flipped>
                 ))}
-            </FlipMove>
+            </Flipper>
         </StandardPageWrapper>
     )
 }

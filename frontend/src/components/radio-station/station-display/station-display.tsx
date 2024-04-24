@@ -2,9 +2,11 @@
 
 import { RadioStation } from '@/api/radio-stations/types/radio-station.type'
 import { AnimatedWave } from '@/components/animations/animated-wave'
+import { PAGE_URLS } from '@/constants/page-urls'
 import { useFavoriteStationsState } from '@/global-state/favorite-stations-state'
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
-import { Box, Button, Divider, Flex, HStack, IconButton, Image, Spacer, Text, Tooltip } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, HStack, IconButton, Image, Link, Spacer, Text, Tooltip } from '@chakra-ui/react'
+import NextLink from 'next/link'
 import { FaRegStar, FaStar } from 'react-icons/fa6'
 
 type StationDisplayProps = {
@@ -20,9 +22,11 @@ export function StationDisplay({ radioStation }: StationDisplayProps) {
         <Box>
             <Flex gap={2} alignItems={'center'}>
                 <HStack spacing={4}>
-                    <Text fontSize="xl">{radioStation.display_name}</Text>
+                    <Link fontSize={'xl'} as={NextLink} href={PAGE_URLS.radioStation(radioStation.name)}>
+                        {radioStation.display_name}
+                    </Link>
                     {favoriteStationNames.includes(radioStation.name) ? (
-                        <Tooltip aria-label={`Remove ${radioStation.display_name} from favorite stations`}>
+                        <Tooltip label={`Remove favorite`}>
                             <IconButton
                                 variant={'text'}
                                 size={'small'}
@@ -34,11 +38,11 @@ export function StationDisplay({ radioStation }: StationDisplayProps) {
                             />
                         </Tooltip>
                     ) : (
-                        <Tooltip aria-label={`Add ${radioStation.display_name} as a favorite station`}>
+                        <Tooltip label={`Add favorite`}>
                             <IconButton
                                 variant={'text'}
                                 size={'small'}
-                                aria-label={`Add ${radioStation.display_name} as a favorite station`}
+                                aria-label={`Add ${radioStation.display_name} to favorite stations`}
                                 icon={<FaRegStar />}
                                 onClick={() => {
                                     addFavoriteStation(radioStation.name)
@@ -62,7 +66,7 @@ export function StationDisplay({ radioStation }: StationDisplayProps) {
                     flexDir={'column'}
                     justifyContent={'center'}
                     alignItems={'center'}
-                    sx={{ minHeight: '100%', width: '70px' }}
+                    sx={{ minHeight: '100%', minWidth: '80px' }}
                 >
                     {currentStation?.name === radioStation.name && isPlaying ? (
                         <AnimatedWave />
