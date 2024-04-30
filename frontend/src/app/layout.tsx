@@ -30,7 +30,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <body>
+            <body style={{ overflow: 'hidden' }}>
                 <Providers>
                     <VH100Box>
                         <NavBar />

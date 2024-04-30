@@ -130,7 +130,7 @@ export function StationPlayer() {
                                         aria-label="Play pause button"
                                         icon={isPlaying ? <FaPause /> : <FaPlay />}
                                         onClick={() => {
-                                            setIsPlaying(false)
+                                            setIsPlaying(!isPlaying)
                                         }}
                                     />
                                 )}
