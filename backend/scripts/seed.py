@@ -32,7 +32,7 @@ seed_radio_stations: list[RadioStationModel] = [
     RadioStationModel(
         name="kxlu",
         display_name="KXLU",
-        stream_url="http://kxlu.streamguys1.com/kxlu-hi",
+        stream_url="https://kxlu.streamguys1.com/kxlu-hi",
         description="KXLU is a radio station broadcasting out of Loyola Marymount University in Los Angeles.",
         image_url=f"{settings.API_BASE_URL}/static/station-logos/kxlu.png",
         playlist_type=RadioStationPlaylistType.SPINITRON,
