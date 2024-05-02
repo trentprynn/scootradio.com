@@ -27,7 +27,7 @@ export default function Home() {
             search: '',
         },
         onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2))
+            // NO-OP -- this form isn't submitted, we listen to the changes
         },
         validateOnChange: true,
     })
@@ -90,6 +90,7 @@ export default function Home() {
                         _placeholder={{ opacity: 1, color: 'gray.500' }}
                         onChange={formik.handleChange}
                         value={formik.values.search}
+                        autoComplete="off"
                     />
                 </form>
             </Box>
