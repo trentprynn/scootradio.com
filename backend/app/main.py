@@ -5,7 +5,14 @@ from app.core.fast_api_handlers import lifespan, exception_handler
 from fastapi.staticfiles import StaticFiles
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    lifespan=lifespan,
+    title="ScootRadio API",
+    contact={
+        "name": "Trent Prynn",
+        "email": "trentprynn@gmail.com",
+    },
+)
 
 
 origins = ["https://scootradio.com", "http://localhost:3000"]
