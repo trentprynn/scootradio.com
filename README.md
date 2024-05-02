@@ -1,4 +1,5 @@
 # [scootradio.com](https://scootradio.com/)
+- API Documentation: [https://api.scootradio.com/docs](https://api.scootradio.com/docs)
 
 ## What is this?
 ScootRadio is a free, open source web application for streaming public radio.
