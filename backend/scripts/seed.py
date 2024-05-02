@@ -44,12 +44,13 @@ seed_radio_stations: list[RadioStationModel] = [
 def seed():
     log.info("running seed")
     with Session(engine) as session:
+        # upsert radio stations from seed into DB
         for seed_radio_station in seed_radio_stations:
-            find_station_statement = select(RadioStationModel).filter_by(
+            find_station_stmt = select(RadioStationModel).filter_by(
                 name=seed_radio_station.name
             )
 
-            existing_seed_station = session.scalars(find_station_statement).first()
+            existing_seed_station = session.scalars(find_station_stmt).first()
 
             if existing_seed_station and existing_seed_station == seed_radio_station:
                 log.info(f"{seed_radio_station.name} up to date, skipping")
@@ -57,6 +58,19 @@ def seed():
 
             log.info(f"inserting / updating {seed_radio_station.name}")
             session.merge(seed_radio_station)
+
+        # remove radio stations from DB if they're not in seed (meaning stations that
+        # have been removed from the seed for some reason)
+        find_stations_to_remove_stmt = select(RadioStationModel).where(
+            RadioStationModel.name.not_in(
+                [seed_radio_station.name for seed_radio_station in seed_radio_stations]
+            )
+        )
+
+        stations_to_remove = session.scalars(find_stations_to_remove_stmt).all()
+        for station in stations_to_remove:
+            log.info(f"removing {station.name} from DB")
+            session.delete(station)
 
         session.commit()
     log.info("seed complete")
