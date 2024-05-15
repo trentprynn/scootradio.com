@@ -1,7 +1,6 @@
 from typing import Optional
-from app.enums.radio_station_playlist_type import RadioStationPlaylistType
 from pydantic import BaseModel
-from app.models.radio_station import RadioStationModel
+from app.radio_stations.models.radio_station import RadioStationModel
 
 
 class RadioStationDTO(BaseModel):
@@ -10,7 +9,6 @@ class RadioStationDTO(BaseModel):
     stream_url: str
     description: str
     image_url: str
-    playlist_type: Optional[RadioStationPlaylistType]
     playlist_url: Optional[str]
 
     class Config:
@@ -24,6 +22,5 @@ class RadioStationDTO(BaseModel):
             stream_url=orm_object.stream_url,
             description=orm_object.description,
             image_url=orm_object.image_url,
-            playlist_type=orm_object.playlist_type,
             playlist_url=orm_object.playlist_url,
         )

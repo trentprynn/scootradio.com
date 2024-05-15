@@ -1,3 +1,5 @@
+import datetime
+from app.base.dtos.health_check import HealthCheckDTO
 from fastapi import APIRouter, status
 
 from fastapi.responses import RedirectResponse, PlainTextResponse
@@ -7,6 +9,15 @@ router = APIRouter(
     tags=["root"],
     dependencies=[],
 )
+
+
+@router.get("/health")
+def health_check() -> HealthCheckDTO:
+    return HealthCheckDTO(
+        status="healthy",
+        time=datetime.datetime.now().astimezone().isoformat(),
+        timezone=datetime.datetime.now().astimezone().tzname(),
+    )
 
 
 @router.get(

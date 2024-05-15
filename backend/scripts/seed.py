@@ -1,10 +1,10 @@
+from app.radio_stations.enums.radio_station_name import RadioStationName
 import structlog
 from sqlalchemy.sql import select
 from app.core.db import engine
 from sqlalchemy.orm import Session
-from app.models.radio_station import RadioStationModel
+from app.radio_stations.models.radio_station import RadioStationModel
 from app.core.config import settings
-from app.enums.radio_station_playlist_type import RadioStationPlaylistType
 from .wait_db import wait_db
 
 
@@ -12,30 +12,27 @@ log = structlog.get_logger()
 
 seed_radio_stations: list[RadioStationModel] = [
     RadioStationModel(
-        name="kxci",
+        name=RadioStationName.KXCI.value,
         display_name="KXCI",
         stream_url="https://ais-sa1.streamon.fm/7005_64k.mp3",
         description="KXCI is a community radio station in Tucson, Arizona.",
         image_url=f"{settings.API_BASE_URL}/static/station-logos/kxci.png",
-        playlist_type=RadioStationPlaylistType.SPINITRON,
         playlist_url="https://spinitron.com/KXCI/",
     ),
     RadioStationModel(
-        name="kexp",
+        name=RadioStationName.KEXP.value,
         display_name="KEXP",
         stream_url="https://kexp-mp3-128.streamguys1.com/kexp128.mp3",
         description="KEXP is a non-commercial radio station licensed to Seattle, Washington.",
         image_url=f"{settings.API_BASE_URL}/static/station-logos/kexp.png",
-        playlist_type=RadioStationPlaylistType.KEXP,
         playlist_url="https://www.kexp.org/playlist/",
     ),
     RadioStationModel(
-        name="kxlu",
+        name=RadioStationName.KXLU.value,
         display_name="KXLU",
         stream_url="https://kxlu.streamguys1.com/kxlu-hi",
         description="KXLU is a radio station broadcasting out of Loyola Marymount University in Los Angeles.",
         image_url=f"{settings.API_BASE_URL}/static/station-logos/kxlu.png",
-        playlist_type=RadioStationPlaylistType.SPINITRON,
         playlist_url="https://spinitron.com/KXLU/",
     ),
 ]

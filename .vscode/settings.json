@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
+        "aiocache",
         "dtos",
         "fastapi",
         "kexp",
@@ -18,6 +19,7 @@
         "SPINITRON",
         "SQLALCHEMY",
         "sqlmodel",
+        "structlog",
         "zustand"
     ]
 }

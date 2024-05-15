@@ -1,6 +1,5 @@
-from app.enums.radio_station_playlist_type import RadioStationPlaylistType
-from sqlalchemy import String, Index, Enum
-from app.models.base import Base
+from sqlalchemy import String, Index
+from app.base.models.base import Base
 from sqlalchemy.orm import Mapped, mapped_column
 
 
@@ -8,15 +7,10 @@ class RadioStationModel(Base):
     __tablename__ = "radio_station"
 
     name: Mapped[str] = mapped_column(String, primary_key=True, unique=True, index=True)
-    display_name: Mapped[str] = mapped_column(String)
+    display_name: Mapped[str] = mapped_column(String, index=True)
     stream_url: Mapped[str] = mapped_column(String)
     description: Mapped[str] = mapped_column(String)
     image_url: Mapped[str] = mapped_column(String)
-    playlist_type: Mapped[RadioStationPlaylistType | None] = mapped_column(
-        Enum(RadioStationPlaylistType, name="radio_station_playlist_type"),
-        nullable=True,
-        default=None,
-    )
     playlist_url: Mapped[str | None] = mapped_column(
         String, nullable=True, default=None
     )
@@ -39,7 +33,6 @@ class RadioStationModel(Base):
                 self.stream_url == other.stream_url,
                 self.description == other.description,
                 self.image_url == other.image_url,
-                self.playlist_type == other.playlist_type,
                 self.playlist_url == other.playlist_url,
             ]
         )

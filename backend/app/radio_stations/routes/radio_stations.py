@@ -1,12 +1,10 @@
-from app.utils.kexp_scraping import get_now_playing_via_kexp
-from app.utils.spinitron_scraping import get_now_playing_via_spinitron
+from app.radio_stations.dtos.radio_station import RadioStationDTO
+from app.radio_stations.now_playing.now_playing_mapper import get_now_playing_from_model
 import structlog
-from app.api.dependencies import CacheDep, SessionDep, get_session
-from app.dtos.now_playing import NowPlayingDTO
-from app.enums.radio_station_playlist_type import RadioStationPlaylistType
+from app.core.dependencies import CacheDep, SessionDep, get_session
+from app.radio_stations.dtos.now_playing import NowPlayingDTO
 from fastapi import APIRouter, Depends, HTTPException
-from app.models.radio_station import RadioStationModel
-from app.dtos.radio_station import RadioStationDTO
+from app.radio_stations.models.radio_station import RadioStationModel
 from sqlalchemy import select
 
 log = structlog.get_logger()
@@ -69,22 +67,11 @@ async def read_radio_station_now_playing(
     if radio_station_model is None:
         raise HTTPException(status_code=404, detail=f"Station {name} was not found")
 
-    if radio_station_model.playlist_type is None:
-        return None
+    now_playing_grabber = get_now_playing_from_model(radio_station_model)
 
-    now_playing: NowPlayingDTO | None = None
+    now_playing_dto = now_playing_grabber.get_now_playing()
 
-    if radio_station_model.playlist_type == RadioStationPlaylistType.SPINITRON:
-        if radio_station_model.playlist_url is None:
-            return None
-        now_playing = get_now_playing_via_spinitron(radio_station_model.playlist_url)
-    elif radio_station_model.playlist_type == RadioStationPlaylistType.KEXP:
-        now_playing = get_now_playing_via_kexp()
-    else:
-        pass
+    if now_playing_dto:
+        await cache.set(f"${name}-now-playing", now_playing_dto.model_dump(), ttl=10)
 
-    if now_playing is None:
-        return None
-
-    await cache.set(f"${name}-now-playing", now_playing.model_dump(), ttl=10)
-    return now_playing
+    return now_playing_dto
