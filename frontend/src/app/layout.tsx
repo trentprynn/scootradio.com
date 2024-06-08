@@ -1,8 +1,7 @@
 import { NavBar } from '@/components/core/layout/nav-bar'
-import { VH100Box } from '@/components/core/layout/vh-100-box'
 import { Providers } from '@/components/core/providers/providers'
 import { StationPlayer } from '@/components/radio-station/station-player/station-player'
-import { Spacer } from '@chakra-ui/react'
+import { Box, Spacer } from '@chakra-ui/react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -30,14 +29,14 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <body style={{ overflow: 'hidden' }}>
+            <body>
                 <Providers>
-                    <VH100Box>
+                    <Box display={'flex'} flexDir={'column'} height={'100dvh'}>
                         <NavBar />
                         {children}
                         <Spacer />
                         <StationPlayer />
-                    </VH100Box>
+                    </Box>
                 </Providers>
             </body>
             {process.env.NODE_ENV === 'production' && (
