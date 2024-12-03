@@ -14,7 +14,7 @@ seed_radio_stations: list[RadioStationModel] = [
     RadioStationModel(
         name=RadioStationName.KXCI.value,
         display_name="KXCI",
-        stream_url="https://ais-sa1.streamon.fm/7005_48k.aac/playlist.m3u8",
+        stream_url="https://kxci.broadcasttool.stream/play",
         description="KXCI is a community radio station in Tucson, Arizona.",
         image_url=f"{settings.API_BASE_URL}/static/station-logos/kxci.png",
         playlist_url="https://spinitron.com/KXCI/",

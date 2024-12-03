@@ -1,11 +1,5 @@
-'use client'
-import { ChakraLayer } from './chakra-layer'
-import { ReactQueryLayer } from './react-query-layer'
+import { ReactQueryProvider } from './react-query-provider'
 
 export function Providers({ children }: { children: React.ReactNode }) {
-    return (
-        <ReactQueryLayer>
-            <ChakraLayer>{children}</ChakraLayer>
-        </ReactQueryLayer>
-    )
+    return <ReactQueryProvider>{children}</ReactQueryProvider>
 }

@@ -1,176 +1,161 @@
 'use client'
 
-import { useRadioStationNowPlaying } from '@/api/radio-stations/react-queries/use-radio-station-now-playing'
+import { useRadioStationNowPlaying } from '@/api/radio-stations/hooks/use-radio-station-now-playing'
 import { RadioStation } from '@/api/radio-stations/types/radio-station.type'
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
-import { Box, Container, Flex, IconButton, Spinner, Stack, Text, useColorModeValue } from '@chakra-ui/react'
 import lodash from 'lodash'
 import mime from 'mime'
 import { useEffect, useRef, useState } from 'react'
-import { FaPause, FaPlay } from 'react-icons/fa'
-import ReactPlayer from 'react-player'
+import { FaPause, FaPlay, FaStop } from 'react-icons/fa6'
 
 export const StationPlayer = () => {
-    const { currentStation } = useRadioPlayerState()
+    const { currentStation, isPlaying } = useRadioPlayerState()
 
-    if (currentStation) {
-        return <StationPlayerContent currentStation={currentStation} />
-    }
+    return (
+        <>
+            {currentStation && <StationNowPlayingDisplay currentStation={currentStation} />}
+            {currentStation && isPlaying && (
+                <StationAudioPlayer key={currentStation.name} currentStation={currentStation} />
+            )}
+        </>
+    )
+}
+
+type StationAudioPlayerProps = {
+    currentStation: RadioStation
+}
+
+const StationAudioPlayer = ({ currentStation }: StationAudioPlayerProps) => {
+    const [loading, setLoading] = useState(true)
+    const audioRef = useRef<HTMLAudioElement | null>(null)
+
+    useEffect(() => {
+        const audio = new Audio(currentStation.stream_url)
+        audioRef.current = audio
+
+        const handlePlay = () => setLoading(false)
+        audio.addEventListener('play', handlePlay)
+
+        audio.play().catch((error) => {
+            if (error.name !== 'AbortError') {
+                console.error('Error playing audio:', error)
+            }
+        })
+
+        return () => {
+            audio.removeEventListener('play', handlePlay)
+            audio.pause()
+            audio.src = 'data:,'
+            audio.load()
+            audioRef.current = null
+
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = null
+            }
+        }
+    }, [currentStation.stream_url])
 
     return null
 }
 
-type StationPlayerContentProps = {
+type StationNowPlayingDisplayProps = {
     currentStation: RadioStation
 }
 
-const StationPlayerContent = ({ currentStation }: StationPlayerContentProps) => {
-    const { isPlaying, setIsPlaying } = useRadioPlayerState()
-
-    const [loading, setLoading] = useState(false)
-
-    const { data: nowPlaying } = useRadioStationNowPlaying(currentStation ? currentStation.name : null)
+export function StationNowPlayingDisplay({ currentStation }: StationNowPlayingDisplayProps) {
+    const { turnOff, play, pause, isPlaying } = useRadioPlayerState()
+    const { data: nowPlaying } = useRadioStationNowPlaying(currentStation.name)
 
     const lastNowPlayingRef = useRef(nowPlaying)
+
     useEffect(() => {
-        // the purpose of this effect is to watch changes to nowPlaying and
-        // update the media session api with the new info
+        if ('mediaSession' in navigator) {
+            if (lodash.isEqual(nowPlaying, lastNowPlayingRef.current)) return
 
-        if ('mediaSession' in navigator === false) {
-            return
-        }
+            lastNowPlayingRef.current = lodash.cloneDeep(nowPlaying)
 
-        if (lodash.isEqual(nowPlaying, lastNowPlayingRef.current)) {
-            return
-        }
-
-        lastNowPlayingRef.current = lodash.cloneDeep(nowPlaying)
-
-        if (!nowPlaying) {
-            navigator.mediaSession.metadata = null
-            return
-        }
-
-        let artwork: MediaImage[] | undefined = undefined
-        if (nowPlaying.thumbnail_url) {
-            const thumbnailMimeType = mime.getType(nowPlaying.thumbnail_url)
-            if (thumbnailMimeType) {
-                artwork = [{ src: nowPlaying.thumbnail_url, sizes: '96x96', type: thumbnailMimeType }]
+            if (!nowPlaying) {
+                navigator.mediaSession.metadata = null
+                return
             }
-        }
 
-        navigator.mediaSession.metadata = new MediaMetadata({
-            title: nowPlaying.song_name ?? undefined,
-            artist: nowPlaying.artist_name ?? undefined,
-            album: nowPlaying.album_name ?? undefined,
-            artwork: artwork,
-        })
+            let artwork: MediaImage[] | undefined
+            if (nowPlaying.thumbnail_url) {
+                const thumbnailMimeType = mime.getType(nowPlaying.thumbnail_url)
+                if (thumbnailMimeType) {
+                    artwork = [{ src: nowPlaying.thumbnail_url, sizes: '96x96', type: thumbnailMimeType }]
+                }
+            }
+
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: nowPlaying.song_name ?? undefined,
+                artist: nowPlaying.artist_name ?? undefined,
+                album: nowPlaying.album_name ?? undefined,
+                artwork: artwork,
+            })
+        }
     }, [nowPlaying])
 
-    const lastStationRef = useRef(currentStation)
-    useEffect(() => {
-        // the purpose of this effect is to watch changes to currentStation and
-        // when a new station is selected, set the loading state to true so the user
-        // sees a spinner while the new station is loading
-        if (lodash.isEqual(currentStation, lastStationRef.current)) {
-            return
+    const handlePlayPause = () => {
+        if (isPlaying) {
+            pause()
+        } else {
+            play()
         }
+    }
 
-        lastStationRef.current = lodash.cloneDeep(currentStation)
-
-        setLoading(true)
-    }, [currentStation])
-
-    const bgColor = useColorModeValue('gray.200', 'gray.900')
-
+    // Using fixed positioning to ensure no gap and always at bottom
     return (
-        <>
-            <Box position="sticky" bottom="10px" width="100%" zIndex="sticky">
-                <Container
-                    sx={{
-                        height: '80px',
-                        overflow: 'hidden',
-                    }}
-                >
-                    <Flex
-                        height={'100%'}
-                        gap={4}
-                        sx={{
-                            px: 4,
-                            height: '100%',
-                            backgroundColor: bgColor,
-                            borderRadius: '8px',
-                        }}
+        <div className="fixed bottom-0 z-50 w-full border-t border-gray-300 bg-gray-100 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+            <div className="mx-auto flex max-w-md items-center justify-between p-2 text-xs text-gray-900 dark:text-gray-100">
+                {nowPlaying?.thumbnail_url ? (
+                    <div className="relative mr-2 h-8 w-8 overflow-hidden rounded bg-gray-200 dark:bg-gray-700">
+                        <img
+                            src={nowPlaying.thumbnail_url}
+                            alt={nowPlaying.song_name ?? 'Current Song'}
+                            className="h-full w-full object-cover"
+                        />
+                    </div>
+                ) : (
+                    <div className="mr-2 flex h-8 w-8 items-center justify-center rounded bg-gray-200 dark:bg-gray-700">
+                        <span className="text-[10px] text-gray-700 dark:text-gray-300">No Img</span>
+                    </div>
+                )}
+
+                <div className="flex flex-1 flex-col items-start justify-center overflow-hidden px-2">
+                    {nowPlaying ? (
+                        <>
+                            <p className="w-full truncate text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                {nowPlaying.song_name}
+                            </p>
+                            <p className="w-full truncate text-[0.75rem] text-gray-700 dark:text-gray-400">
+                                {nowPlaying.artist_name} - {nowPlaying.album_name}
+                            </p>
+                        </>
+                    ) : (
+                        <p className="w-full truncate text-sm font-medium text-gray-900 dark:text-gray-100">
+                            Now Playing {currentStation.display_name}
+                        </p>
+                    )}
+                </div>
+
+                <div className="flex items-center space-x-2">
+                    <button
+                        onClick={handlePlayPause}
+                        className="transition-colors hover:text-blue-700 dark:hover:text-blue-400"
+                        title={isPlaying ? 'Pause' : 'Play'}
                     >
-                        <Flex direction={'column'} justifyContent={'center'}>
-                            <Box>
-                                <Text fontSize={'lg'} fontWeight={'bold'}>
-                                    Now Playing
-                                </Text>
-                                <Text fontSize={'lg'} color="gray.500">
-                                    {currentStation.display_name}
-                                </Text>
-                            </Box>
-                        </Flex>
-
-                        <Flex flex="1" direction={'column'} justifyContent={'center'}>
-                            {!loading && nowPlaying && (
-                                <>
-                                    <Text fontSize={'md'} color="gray.500" fontWeight={'semibold'} noOfLines={1}>
-                                        {nowPlaying.song_name}
-                                    </Text>
-                                    <Text fontSize={'sm'} color="gray.500" noOfLines={1}>
-                                        {nowPlaying.artist_name} - {nowPlaying.album_name}
-                                    </Text>
-
-                                    <Text fontSize={'sm'} color="gray.500" noOfLines={1}>
-                                        {nowPlaying.play_time}
-                                    </Text>
-                                </>
-                            )}
-                        </Flex>
-
-                        <Flex direction={'column'} justifyContent={'center'}>
-                            {loading ? (
-                                <Stack direction={'row'} alignItems={'center'}>
-                                    <Spinner size="md" />
-                                </Stack>
-                            ) : (
-                                <IconButton
-                                    aria-label="Play pause button"
-                                    icon={isPlaying ? <FaPause /> : <FaPlay />}
-                                    onClick={() => {
-                                        setIsPlaying(!isPlaying)
-                                    }}
-                                />
-                            )}
-                        </Flex>
-                    </Flex>
-                </Container>
-            </Box>
-
-            <Box hidden>
-                <ReactPlayer
-                    url={currentStation.stream_url}
-                    playing={isPlaying}
-                    onPlay={() => {
-                        setLoading(false)
-
-                        if (!isPlaying) {
-                            setIsPlaying(true)
-                        }
-                    }}
-                    onPause={() => {
-                        setIsPlaying(false)
-                    }}
-                    onError={() => {
-                        setIsPlaying(false)
-                    }}
-                    onEnded={() => {
-                        setIsPlaying(false)
-                    }}
-                />
-            </Box>
-        </>
+                        {isPlaying ? <FaPause /> : <FaPlay />}
+                    </button>
+                    <button
+                        onClick={turnOff}
+                        className="transition-colors hover:text-red-700 dark:hover:text-red-400"
+                        title="Stop"
+                    >
+                        <FaStop />
+                    </button>
+                </div>
+            </div>
+        </div>
     )
 }

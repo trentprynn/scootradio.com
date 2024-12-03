@@ -1,8 +1,9 @@
 import { NavBar } from '@/components/core/layout/nav-bar'
 import { Providers } from '@/components/core/providers/providers'
 import { StationPlayer } from '@/components/radio-station/station-player/station-player'
-import { Box, Spacer } from '@chakra-ui/react'
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
+
+import './globals.css'
 
 export const metadata: Metadata = {
     title: 'scootradio.com',
@@ -22,21 +23,23 @@ export const metadata: Metadata = {
     },
 }
 
+export const viewport: Viewport = {
+    width: 'device-width',
+    initialScale: 1,
+}
+
 export default function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode
 }>) {
     return (
-        <html lang="en" suppressHydrationWarning>
-            <body>
+        <html lang="en">
+            <body className="dark:input-slate-200 bg-white text-slate-500 antialiased dark:bg-slate-900 dark:text-slate-400">
                 <Providers>
-                    <Box display={'flex'} flexDir={'column'} height={'100dvh'}>
-                        <NavBar />
-                        {children}
-                        <Spacer />
-                        <StationPlayer />
-                    </Box>
+                    <NavBar />
+                    {children}
+                    <StationPlayer />
                 </Providers>
             </body>
             {process.env.NODE_ENV === 'production' && (

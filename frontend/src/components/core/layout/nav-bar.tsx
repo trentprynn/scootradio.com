@@ -1,158 +1,54 @@
-'use client'
-
-import { Link } from '@chakra-ui/next-js'
-import {
-    Box,
-    Button,
-    Flex,
-    HStack,
-    Icon,
-    IconButton,
-    Image,
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-    Spacer,
-    Stack,
-    Text,
-    Tooltip,
-    useBreakpointValue,
-    useColorMode,
-    useColorModeValue,
-} from '@chakra-ui/react'
-import { FaChevronRight, FaMoon, FaSun } from 'react-icons/fa6'
-import { IoLogoVenmo } from 'react-icons/io5'
+import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
+import Link from 'next/link'
 
 export function NavBar() {
-    const { colorMode, toggleColorMode } = useColorMode()
-
     return (
-        <Box>
-            <Flex
-                bg={useColorModeValue('white', 'gray.800')}
-                color={useColorModeValue('gray.600', 'white')}
-                minH={'60px'}
-                py={{ base: 2 }}
-                px={{ base: 4 }}
-                borderBottom={1}
-                borderStyle={'solid'}
-                borderColor={useColorModeValue('gray.200', 'gray.900')}
-                align={'center'}
-            >
-                <Stack direction={'row'} spacing={4}>
-                    <Image boxSize={'32px'} src="/logo192.png" alt="ScootRadio logo" />
-
-                    <AboutPopover />
-                </Stack>
-
-                <Spacer />
-
-                <HStack gap={1}>
-                    <Tooltip label={colorMode === 'light' ? 'Dark mode' : 'Light mode'}>
-                        <IconButton
-                            variant={'ghost'}
-                            size="lg"
-                            aria-label={`Toggle light/dark color theme`}
-                            icon={colorMode === 'light' ? <FaMoon size={'24px'} /> : <FaSun size={'24px'} />}
-                            onClick={() => {
-                                toggleColorMode()
-                            }}
-                        />
-                    </Tooltip>
-
-                    <Tooltip label={'Tip me?'}>
-                        <Link href="https://venmo.com/u/TrentPrynn" target="_blank">
-                            <IconButton
-                                variant={'ghost'}
-                                size="lg"
-                                aria-label={`Tip the creator of scootradio.com`}
-                                icon={<IoLogoVenmo size={'32px'} />}
-                                color="blue.400"
-                                onClick={() => {
-                                    toggleColorMode()
-                                }}
-                            />
-                        </Link>
-                    </Tooltip>
-                </HStack>
-            </Flex>
-        </Box>
-    )
-}
-
-const AboutPopover = () => {
-    const popoverContentBgColor = useColorModeValue('white', 'gray.800')
-
-    const trigger = useBreakpointValue<'click' | 'hover' | undefined>(
-        {
-            base: 'click',
-            md: 'hover',
-        },
-        {
-            fallback: 'click',
-        }
-    )
-
-    return (
-        <Stack direction={'row'} spacing={4}>
-            <Popover trigger={trigger} placement={'bottom-start'}>
-                <PopoverTrigger>
-                    <Button variant={'ghost'} size="sm">
-                        About
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent border={0} boxShadow={'xl'} bg={popoverContentBgColor} p={4} rounded={'xl'} minW={'sm'}>
-                    <Stack>
-                        <AboutPopoverSubItem label="Creator" subLabel="Trent Prynn" href={'https://trentprynn.com'} />
-                        <AboutPopoverSubItem
-                            label="Source Code"
-                            subLabel="GitHub"
-                            href={'https://github.com/trentprynn/scootradio.com'}
-                        />
-                    </Stack>
-                </PopoverContent>
-            </Popover>
-        </Stack>
-    )
-}
-
-type AboutPopoverSubItemProps = {
-    label: string
-    href: string
-    subLabel: string
-}
-
-const AboutPopoverSubItem = ({ label, href, subLabel }: AboutPopoverSubItemProps) => {
-    return (
-        <Box
-            as="a"
-            href={href}
-            target="_blank"
-            role={'group'}
-            display={'block'}
-            p={2}
-            rounded={'md'}
-            _hover={{ bg: useColorModeValue('pink.50', 'gray.900') }}
-        >
-            <Stack direction={'row'} align={'center'}>
-                <Box>
-                    <Text transition={'all .3s ease'} _groupHover={{ color: 'pink.400' }} fontWeight={500}>
-                        {label}
-                    </Text>
-                    <Text fontSize={'sm'}>{subLabel}</Text>
-                </Box>
-                <Flex
-                    transition={'all .3s ease'}
-                    transform={'translateX(-10px)'}
-                    opacity={0}
-                    _groupHover={{ opacity: '100%', transform: 'translateX(0)' }}
-                    justify={'flex-end'}
-                    align={'center'}
-                    flex={1}
+        <nav className="flex items-center justify-between bg-gray-100 p-4 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+            <div className="flex items-center">
+                <Link href={'/'}>
+                    <img src="/logo192.png" alt="ScootRadio Logo" className="h-8 w-8" />
+                </Link>
+                <span className="ml-2 text-xl font-semibold">ScootRadio</span>
+            </div>
+            <Popover className="relative">
+                <PopoverButton className="block text-sm font-semibold text-gray-600 hover:text-gray-900 focus:outline-none dark:text-gray-300 dark:hover:text-white">
+                    About
+                </PopoverButton>
+                <PopoverPanel
+                    transition
+                    className="absolute right-0 mt-2 w-60 rounded-xl border border-gray-200 bg-white text-sm shadow-lg ring-1 ring-black/5 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:ring-white/10"
                 >
-                    <Icon color={'pink.400'} w={5} h={5} as={FaChevronRight} />
-                </Flex>
-            </Stack>
-        </Box>
+                    <div className="space-y-2 p-3">
+                        <a
+                            className="block rounded-lg px-3 py-2 text-gray-800 transition hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                            href="https://trentprynn.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <p className="font-semibold">Creator</p>
+                            <p className="text-gray-600 dark:text-gray-400">Trent Prynn</p>
+                        </a>
+                        <a
+                            className="block rounded-lg px-3 py-2 text-gray-800 transition hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                            href="https://github.com/trentprynn"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <p className="font-semibold">Source</p>
+                            <p className="text-gray-600 dark:text-gray-400">GitHub</p>
+                        </a>
+                        <a
+                            className="block rounded-lg px-3 py-2 text-gray-800 transition hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                            href="https://venmo.com/u/TrentPrynn"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <p className="font-semibold">Support</p>
+                            <p className="text-gray-600 dark:text-gray-400">Venmo</p>
+                        </a>
+                    </div>
+                </PopoverPanel>
+            </Popover>
+        </nav>
     )
 }

@@ -1,12 +1,9 @@
 'use client'
 
 import { RadioStation } from '@/api/radio-stations/types/radio-station.type'
-import { AnimatedWave } from '@/components/animations/animated-wave'
-import { PAGE_URLS } from '@/constants/page-urls'
+import { AnimatedWave } from '@/components/core/animations/animated-wave'
 import { useFavoriteStationsState } from '@/global-state/favorite-stations-state'
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
-import { Box, Button, Divider, Flex, HStack, IconButton, Image, Link, Spacer, Text, Tooltip } from '@chakra-ui/react'
-import NextLink from 'next/link'
 import { FaRegStar, FaStar } from 'react-icons/fa6'
 
 type StationDisplayProps = {
@@ -14,82 +11,55 @@ type StationDisplayProps = {
 }
 
 export function StationDisplay({ radioStation }: StationDisplayProps) {
-    const { currentStation, setIsPlaying, playStation, isPlaying } = useRadioPlayerState()
+    const { currentStation, playStation } = useRadioPlayerState()
 
     const { favoriteStationNames, addFavoriteStation, removeFavoriteStation } = useFavoriteStationsState()
 
+    const isFavorite = favoriteStationNames.includes(radioStation.name)
+    const isCurrentStationPlaying = currentStation?.name === radioStation.name
+
     return (
-        <Box>
-            <Flex gap={2} alignItems={'center'}>
-                <HStack spacing={4}>
-                    <Link fontSize={'xl'} as={NextLink} href={PAGE_URLS.radioStation(radioStation.name)}>
-                        {radioStation.display_name}
-                    </Link>
-                    {favoriteStationNames.includes(radioStation.name) ? (
-                        <Tooltip label={`Remove favorite`}>
-                            <IconButton
-                                variant={'text'}
-                                size={'small'}
-                                aria-label={`Remove ${radioStation.display_name} from favorite stations`}
-                                icon={<FaStar />}
-                                onClick={() => {
-                                    removeFavoriteStation(radioStation.name)
-                                }}
-                            />
-                        </Tooltip>
+        <div className="max-w-md rounded-lg bg-white p-4 shadow-md dark:bg-gray-800">
+            <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                    <img
+                        className="mr-3 h-12 w-12 rounded-full"
+                        src={radioStation.image_url}
+                        alt={radioStation.display_name}
+                    />
+                    <div>
+                        <p className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                            {radioStation.display_name}
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">{radioStation.description}</p>
+                    </div>
+                </div>
+                <div>
+                    {isFavorite ? (
+                        <button onClick={() => removeFavoriteStation(radioStation.name)} title="Remove favorite">
+                            <FaStar />
+                        </button>
                     ) : (
-                        <Tooltip label={`Add favorite`}>
-                            <IconButton
-                                variant={'text'}
-                                size={'small'}
-                                aria-label={`Add ${radioStation.display_name} to favorite stations`}
-                                icon={<FaRegStar />}
-                                onClick={() => {
-                                    addFavoriteStation(radioStation.name)
-                                }}
-                            />
-                        </Tooltip>
+                        <button onClick={() => addFavoriteStation(radioStation.name)} title="Add favorite">
+                            <FaRegStar />
+                        </button>
                     )}
-                </HStack>
-
-                <Spacer />
-                <Image width={100} src={radioStation.image_url} alt={radioStation.display_name} />
-            </Flex>
-
-            <Flex mt={4} gap={2} minHeight={'60px'} alignItems={'center'}>
-                <Text fontSize={'sm'}>{radioStation.description}</Text>
-
-                <Spacer />
-
-                <Box
-                    display={'flex'}
-                    flexDir={'column'}
-                    justifyContent={'center'}
-                    alignItems={'center'}
-                    sx={{ minHeight: '100%', minWidth: '80px' }}
-                >
-                    {currentStation?.name === radioStation.name && isPlaying ? (
-                        <AnimatedWave />
-                    ) : (
-                        <Button
-                            onClick={() => {
-                                if (!currentStation || currentStation.name !== radioStation.name) {
-                                    playStation(radioStation)
-                                    return
-                                }
-
-                                if (currentStation.name === radioStation.name && !isPlaying) {
-                                    setIsPlaying(true)
-                                }
-                            }}
-                        >
-                            Play
-                        </Button>
-                    )}
-                </Box>
-            </Flex>
-
-            <Divider mt={2} />
-        </Box>
+                </div>
+            </div>
+            <div className="mt-2 flex items-center">
+                {isCurrentStationPlaying ? (
+                    <AnimatedWave />
+                ) : (
+                    <button
+                        onClick={() => {
+                            playStation(radioStation)
+                        }}
+                        className="rounded bg-blue-500 px-3 py-1 text-sm font-semibold text-white hover:bg-blue-600 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700"
+                    >
+                        Play
+                    </button>
+                )}
+            </div>
+        </div>
     )
 }

@@ -3,20 +3,26 @@ import { create } from 'zustand'
 
 interface RadioPlayerState {
     currentStation: RadioStation | null
-    playStation: (station: RadioStation) => void
-    turnOff: () => void
     isPlaying: boolean
-    setIsPlaying: (isPlaying: boolean) => void
+    playStation: (station: RadioStation) => void
+    play: () => void
+    pause: () => void
+    turnOff: () => void
 }
 
 export const useRadioPlayerState = create<RadioPlayerState>()((set) => ({
     currentStation: null,
+    isPlaying: false,
     playStation: (station: RadioStation) => {
         set(() => ({ currentStation: station, isPlaying: true }))
+    },
+    play: () => {
+        set(() => ({ isPlaying: true }))
+    },
+    pause: () => {
+        set(() => ({ isPlaying: false }))
     },
     turnOff: () => {
         set(() => ({ currentStation: null, isPlaying: false }))
     },
-    isPlaying: false,
-    setIsPlaying: (isPlaying) => set(() => ({ isPlaying })),
 }))

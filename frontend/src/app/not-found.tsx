@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { useEffectOnce } from 'react-use'
 
 export default function NotFoundRedirect({
     children,
@@ -10,29 +10,11 @@ export default function NotFoundRedirect({
 }>) {
     const { replace } = useRouter()
 
-    const [redirected, setRedirected] = useState(false)
-
-    const redirectedRootOnce = useRef(false)
-    useEffect(() => {
-        // the purpose of this effect is to the redirect the user to
+    useEffectOnce(() => {
+        // the purpose of this effect is to redirect the user to
         // the root page of the application instead of rendering a 404 page
-
-        if (redirectedRootOnce.current) {
-            return
-        }
-
-        const redirectRoot = async () => {
-            replace('/')
-            setRedirected(true)
-        }
-
-        redirectedRootOnce.current = true
-        redirectRoot()
-    }, [replace])
-
-    if (!redirected) {
-        return null
-    }
+        replace('/')
+    })
 
     return children
 }
