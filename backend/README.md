@@ -14,7 +14,7 @@
 
 ## Docker container
 - `docker build . -t api.scootradio.com`
-- `docker run -d --name api.scootradio.com --env-file .env -p 8000:8000  api.scootradio.com`
+- `docker run -d --name api.scootradio.com --env-file .env -p 8000:8000 api.scootradio.com`
 - `docker stop api.scootradio.com`
 - `docker rm api.scootradio.com`
 - `docker rmi api.scootradio.com`

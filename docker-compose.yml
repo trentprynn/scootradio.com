@@ -1,0 +1,67 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+      - NEXT_PUBLIC_ZOD_LOUD_FAIL_ENABLED=true
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=local
+      - API_BASE_URL=http://localhost:8000
+      - PGHOST=db
+      - PGPORT=5432
+      - PGDATABASE=scoot-radio
+      - PGUSER=scoot-radio-user
+      - PGPASSWORD=scoot-radio-pass
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=scoot-radio-user
+      - POSTGRES_PASSWORD=scoot-radio-pass
+      - POSTGRES_DB=scoot-radio
+    ports:
+      - "5432:5432"
+    volumes:
+      - scoot-radio-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB -h localhost || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    volumes:
+      - scoot-radio-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  scoot-radio-db-data:
+    name: scoot-radio-db-data
+  scoot-radio-redis-data:
+    name: scoot-radio-redis-data

@@ -1,4 +1,4 @@
-FROM python:3.11 as deps
+FROM python:3.11 AS deps
 
 WORKDIR /deps
 
@@ -8,7 +8,7 @@ COPY ./pyproject.toml ./poetry.lock* /deps/
 
 RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 
-FROM python:3.11
+FROM python:3.11 AS runner
 
 WORKDIR /app
 
