@@ -1,9 +1,11 @@
 import { NavBar } from '@/components/core/layout/nav-bar'
-import { Providers } from '@/components/core/providers/providers'
 import { StationPlayer } from '@/components/radio-station/station-player/station-player'
 import type { Metadata, Viewport } from 'next'
 
-import './globals.css'
+import { ReactQueryProvider } from '@/components/core/providers/react-query-provider'
+import './global.css'
+
+import { ThemeProvider } from 'next-themes'
 
 export const metadata: Metadata = {
     title: 'scootradio.com',
@@ -34,14 +36,17 @@ export default function RootLayout({
     children: React.ReactNode
 }>) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
             <body className="dark:input-slate-200 bg-white text-slate-500 antialiased dark:bg-slate-900 dark:text-slate-400">
-                <Providers>
-                    <NavBar />
-                    {children}
-                    <StationPlayer />
-                </Providers>
+                <ThemeProvider attribute="class">
+                    <ReactQueryProvider>
+                        <NavBar />
+                        {children}
+                        <StationPlayer />
+                    </ReactQueryProvider>
+                </ThemeProvider>
             </body>
+
             {process.env.NODE_ENV === 'production' && (
                 <script async defer data-collect-dnt="true" src="https://sa.scootradio.com/latest.js"></script>
             )}
