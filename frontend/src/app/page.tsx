@@ -101,7 +101,7 @@ export default function Home() {
                 </div>
             )}
 
-            <div className="flex-column mb-20 mt-5 flex justify-center gap-y-1">
+            <div className="flex-column mb-16 mt-5 flex justify-center gap-y-1 p-4">
                 <Flipper flipKey={filteredAndSortedStations.map((s) => s.name).join('')}>
                     {filteredAndSortedStations.map((radioStation) => (
                         <Flipped key={radioStation.name} flipId={radioStation.name}>
