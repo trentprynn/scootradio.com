@@ -46,10 +46,6 @@ export default function RootLayout({
                     </ReactQueryProvider>
                 </ThemeProvider>
             </body>
-
-            {process.env.NODE_ENV === 'production' && (
-                <script async defer data-collect-dnt="true" src="https://sa.scootradio.com/latest.js"></script>
-            )}
         </html>
     )
 }
