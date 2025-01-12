@@ -2,26 +2,22 @@ FROM python:3.11 AS deps
 
 WORKDIR /deps
 
-RUN pip install poetry
-
+RUN pip install poetry==1.8.5
 COPY ./pyproject.toml ./poetry.lock* /deps/
-
 RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 
 FROM python:3.11 AS runner
 
-WORKDIR /app
+WORKDIR /api
 
-COPY --from=deps /deps/requirements.txt /app/requirements.txt
+ENV PYTHONPATH=/api
 
-RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+COPY --from=deps /deps/requirements.txt /api/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /api/requirements.txt
 
-COPY ./alembic.ini /app/
+COPY ./alembic.ini /api/
+COPY ./scripts /api/scripts
+COPY ./static /api/static
+COPY ./app /api/app
 
-COPY ./scripts /app/scripts
-
-COPY ./static /app/static
-
-COPY ./app /app/app
-
-CMD export PORT="${PORT:-8000}" && uvicorn "app.main:app" --host "0.0.0.0" --port "$PORT"
+CMD ["python", "/api/scripts/start.py"]

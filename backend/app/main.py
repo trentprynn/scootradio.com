@@ -5,7 +5,6 @@ from fastapi.staticfiles import StaticFiles
 from app.radio_stations.routes.radio_stations import router as RadioStationRouter
 from app.base.routes.root import router as RootRouter
 
-
 app = FastAPI(
     lifespan=lifespan,
     title="ScootRadio API",
@@ -14,7 +13,6 @@ app = FastAPI(
         "email": "trentprynn@gmail.com",
     },
 )
-
 
 origins = ["https://scootradio.com", "http://localhost:3000"]
 

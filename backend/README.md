@@ -1,6 +1,6 @@
 ## Useful commands
-- Create DB `docker run --name scoot-radio-db -e POSTGRES_USER=scoot-radio-user -e POSTGRES_PASSWORD=scoot-radio-pass -e POSTGRES_DB=scoot-radio -p 5432:5432 -v scoot-radio-db-data:/var/lib/postgresql/data -d postgres`
-- Create Redis `docker run --name scoot-radio-redis -p 6379:6379  -v scoot-radio-redis-data:/data -d redis`
+- Create DB `docker run --name scoot-radio-db -e POSTGRES_USER=scoot-radio-user -e POSTGRES_PASSWORD=scoot-radio-pass -e POSTGRES_DB=scoot-radio -p 5432:5432 -v scoot-radio-db-data:/var/lib/postgresql/data -d postgres:15`
+- Create Redis `docker run --name scoot-radio-redis -p 6379:6379  -v scoot-radio-redis-data:/data -d redis:7`
 - Create `.env` file with necessary entries (`cp .env.sample .env`)
 - Run App `make start`
     - installs dependencies

@@ -13,7 +13,7 @@ class Settings(BaseSettings):
         env_file=".env", env_ignore_empty=True, extra="ignore"
     )
 
-    ENVIRONMENT: Literal["local", "staging", "production"]
+    ENVIRONMENT: Literal["development", "production"]
 
     API_BASE_URL: str
 
