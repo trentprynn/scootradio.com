@@ -34,10 +34,7 @@ def main():
 
     log.info("running ruff format")
     ruff_format = subprocess.run(
-        [
-            "ruff",
-            "format",
-        ],
+        ["ruff", "format"],
         check=False,
         capture_output=True,
         text=True,

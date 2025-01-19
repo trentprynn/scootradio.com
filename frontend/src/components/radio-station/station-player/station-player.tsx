@@ -13,7 +13,7 @@ import { ImVolumeHigh, ImVolumeLow, ImVolumeMedium, ImVolumeMute2 } from 'react-
 import { useEffectOnce } from 'react-use'
 
 export const StationPlayer = () => {
-    const { currentStation, playing: isPlaying } = useRadioPlayerState()
+    const { currentStation } = useRadioPlayerState()
 
     return (
         <>

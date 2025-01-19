@@ -15,9 +15,7 @@ class RadioStationModel(Base):
         String, nullable=True, default=None
     )
     starting_volume: Mapped[int] = mapped_column(
-        Integer, 
-        nullable=False, 
-        server_default=text("50")  
+        Integer, nullable=False, server_default=text("50")
     )
 
     __table_args__ = (Index("idx_name", "name", unique=True),)
