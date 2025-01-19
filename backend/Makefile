@@ -1,4 +1,4 @@
-.PHONY: save-deps install start lint create-migration migrate seed
+.PHONY: save-deps install start lint create-migration migrate migrate-down seed
 
 save-deps:
 	poetry lock && poetry install --sync
@@ -17,6 +17,9 @@ create-migration: install
 
 migrate: install
 	poetry run migrate
+
+migrate-down: install
+	poetry run migrate-down
 
 seed: install
 	poetry run seed

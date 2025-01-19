@@ -6,11 +6,10 @@ import { LOUD_ZOD_FAILURE_ENABLED } from '@/config/app-settings'
 import { RadioStationNowPlaying, RadioStationNowPlayingSchema } from '../types/radio-station-now-playing.type'
 
 export const useRadioStationNowPlaying = (stationName: string) => {
+    const url = API_URLS.radio_stations.fetchNowPlaying(stationName)
     return useQuery({
-        queryKey: [API_URLS.radio_stations.fetchNowPlaying(stationName)],
+        queryKey: [url],
         queryFn: async () => {
-            const url = API_URLS.radio_stations.fetchNowPlaying(stationName)
-
             const axiosInstance = getAxiosInstance()
 
             return await axiosInstance.get<RadioStationNowPlaying>(url).then((res) => {

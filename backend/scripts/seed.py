@@ -18,6 +18,7 @@ seed_radio_stations: list[RadioStationModel] = [
         description="KXCI is a community radio station in Tucson, Arizona.",
         image_url=f"{settings.API_BASE_URL}/static/station-logos/kxci.png",
         playlist_url="https://spinitron.com/KXCI/",
+        starting_volume=30,
     ),
     RadioStationModel(
         name=RadioStationName.KEXP.value,
@@ -26,6 +27,7 @@ seed_radio_stations: list[RadioStationModel] = [
         description="KEXP is a non-commercial radio station licensed to Seattle, Washington.",
         image_url=f"{settings.API_BASE_URL}/static/station-logos/kexp.png",
         playlist_url="https://www.kexp.org/playlist/",
+        starting_volume=35,
     ),
     RadioStationModel(
         name=RadioStationName.KXLU.value,
@@ -34,6 +36,7 @@ seed_radio_stations: list[RadioStationModel] = [
         description="KXLU is a radio station broadcasting out of Loyola Marymount University in Los Angeles.",
         image_url=f"{settings.API_BASE_URL}/static/station-logos/kxlu.png",
         playlist_url="https://spinitron.com/KXLU/",
+        starting_volume=30,
     ),
 ]
 

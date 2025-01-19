@@ -10,6 +10,7 @@ start = "scripts.start:main"
 lint = "scripts.lint:main"
 create-migration = "scripts.create_migration:main"
 migrate = "scripts.migrate:main"
+migrate-down = "scripts.migrate_down:main"
 seed = "scripts.seed:main"
 
 [tool.poetry.dependencies]

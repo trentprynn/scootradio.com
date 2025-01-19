@@ -1,6 +1,4 @@
-'use client'
-
-import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
+import { Popover, PopoverBackdrop, PopoverButton, PopoverPanel } from '@headlessui/react'
 
 export function AboutPopover() {
     return (
@@ -8,6 +6,7 @@ export function AboutPopover() {
             <PopoverButton className="block text-sm font-semibold text-gray-600 hover:text-gray-900 focus:outline-none dark:text-gray-300 dark:hover:text-white">
                 About
             </PopoverButton>
+            <PopoverBackdrop className="fixed inset-0" />
             <PopoverPanel
                 transition
                 className="absolute right-0 mt-2 w-60 rounded-xl border border-gray-200 bg-white text-sm shadow-lg ring-1 ring-black/5 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:ring-white/10"

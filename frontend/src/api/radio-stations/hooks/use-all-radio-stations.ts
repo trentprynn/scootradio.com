@@ -5,11 +5,10 @@ import { useQuery } from 'react-query'
 import { RadioStation, RadioStationSchema } from '../types/radio-station.type'
 
 export const useAllRadioStations = () => {
+    const url = API_URLS.radio_stations.fetchAll
     return useQuery({
-        queryKey: [API_URLS.radio_stations.fetchAll],
+        queryKey: [url],
         queryFn: async () => {
-            const url = API_URLS.radio_stations.fetchAll
-
             const axiosInstance = getAxiosInstance()
 
             return await axiosInstance.get<RadioStation[]>(url).then((res) => {
