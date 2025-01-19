@@ -1,5 +1,6 @@
 'use client'
 
+import { useIsIOS } from '@/api/radio-stations/hooks/use-is-ios'
 import { useRadioStationNowPlaying } from '@/api/radio-stations/hooks/use-radio-station-now-playing'
 import { RadioStation } from '@/api/radio-stations/types/radio-station.type'
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
@@ -91,6 +92,8 @@ type StationNowPlayingDisplayProps = {
 }
 
 export function StationNowPlayingDisplay({ currentStation }: StationNowPlayingDisplayProps) {
+    const isIOS = useIsIOS()
+
     const { turnOff, play, pause, playing, volume, setVolume } = useRadioPlayerState()
 
     const { data: nowPlaying } = useRadioStationNowPlaying(currentStation.name)
@@ -175,30 +178,33 @@ export function StationNowPlayingDisplay({ currentStation }: StationNowPlayingDi
                 </div>
 
                 <div className="flex items-center space-x-2">
-                    <Popover className="relative">
-                        <PopoverButton
-                            className="pt-1 transition-colors hover:text-blue-700 dark:hover:text-blue-400"
-                            title="Volume"
-                        >
-                            {getVolumeIcon(volume)}
-                        </PopoverButton>
+                    {!isIOS && (
+                        // IOS does not html element volume control
+                        <Popover className="relative">
+                            <PopoverButton
+                                className="pt-1 transition-colors hover:text-blue-700 dark:hover:text-blue-400"
+                                title="Volume"
+                            >
+                                {getVolumeIcon(volume)}
+                            </PopoverButton>
 
-                        <PopoverBackdrop className="fixed inset-0" />
+                            <PopoverBackdrop className="fixed inset-0" />
 
-                        <PopoverPanel anchor={{ to: 'bottom start', gap: '20px' }}>
-                            <div className="flex h-[200px] w-[40px] flex-col items-center justify-center overflow-hidden rounded-lg bg-white dark:bg-gray-600">
-                                <input
-                                    type="range"
-                                    min={0}
-                                    max={100}
-                                    step={1}
-                                    value={volume}
-                                    onChange={(e) => setVolume(Number(e.target.value))}
-                                    className="rotate-[270deg]"
-                                />
-                            </div>
-                        </PopoverPanel>
-                    </Popover>
+                            <PopoverPanel anchor={{ to: 'bottom start', gap: '20px' }}>
+                                <div className="flex h-[200px] w-[40px] flex-col items-center justify-center overflow-hidden rounded-lg bg-white dark:bg-gray-600">
+                                    <input
+                                        type="range"
+                                        min={0}
+                                        max={100}
+                                        step={1}
+                                        value={volume}
+                                        onChange={(e) => setVolume(Number(e.target.value))}
+                                        className="rotate-[270deg]"
+                                    />
+                                </div>
+                            </PopoverPanel>
+                        </Popover>
+                    )}
                     <button
                         onClick={handlePlayPause}
                         className="transition-colors hover:text-blue-700 dark:hover:text-blue-400"
