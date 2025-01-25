@@ -9,7 +9,7 @@ export function AboutPopover() {
             <PopoverBackdrop className="fixed inset-0" />
             <PopoverPanel
                 transition
-                className="absolute right-0 mt-2 w-60 rounded-xl border border-gray-200 bg-white text-sm shadow-lg ring-1 ring-black/5 focus:outline-hidden dark:border-gray-700 dark:bg-gray-800 dark:ring-white/10"
+                className="absolute right-0 mt-2 w-60 rounded-xl border border-gray-200 bg-white text-sm ring-1 shadow-lg ring-black/5 focus:outline-hidden dark:border-gray-700 dark:bg-gray-800 dark:ring-white/10"
             >
                 <div className="space-y-2 p-3">
                     <a

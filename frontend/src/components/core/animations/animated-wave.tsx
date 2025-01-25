@@ -8,7 +8,7 @@ export const AnimatedWave = () => {
             <Wave
                 fill="#f79902"
                 paused={false}
-                className="absolute left-0 top-0 h-full w-full"
+                className="absolute top-0 left-0 h-full w-full"
                 options={{
                     height: 3,
                     amplitude: 8,

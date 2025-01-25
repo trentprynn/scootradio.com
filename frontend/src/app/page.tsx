@@ -88,7 +88,7 @@ export default function Home() {
                         type="search"
                         placeholder="Search..."
                         autoComplete="off"
-                        className="block w-60 rounded-lg border border-gray-300 bg-gray-50 px-3 py-1.5 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-hidden focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:border-blue-400 dark:focus:ring-blue-400"
+                        className="block w-60 rounded-lg border border-gray-300 bg-gray-50 px-3 py-1.5 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:ring-blue-500 focus:outline-hidden dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:border-blue-400 dark:focus:ring-blue-400"
                         onChange={formik.handleChange}
                         value={formik.values.search}
                     />
@@ -101,7 +101,7 @@ export default function Home() {
                 </div>
             )}
 
-            <div className="flex-column mb-16 mt-5 flex justify-center gap-y-1 p-4">
+            <div className="flex-column mt-5 mb-16 flex justify-center gap-y-1 p-4">
                 <Flipper flipKey={filteredAndSortedStations.map((s) => s.name).join('')}>
                     {filteredAndSortedStations.map((radioStation) => (
                         <Flipped key={radioStation.name} flipId={radioStation.name}>
