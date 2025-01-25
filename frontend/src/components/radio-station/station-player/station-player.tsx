@@ -147,7 +147,7 @@ export function StationNowPlayingDisplay({ currentStation }: StationNowPlayingDi
         <div className="fixed bottom-0 w-full border-t border-gray-300 bg-gray-100 shadow-lg dark:border-gray-700 dark:bg-gray-800">
             <div className="mx-auto flex max-w-md items-center justify-between p-2 text-xs text-gray-900 dark:text-gray-100">
                 {nowPlaying?.thumbnail_url ? (
-                    <div className="relative mr-2 h-8 w-8 overflow-hidden rounded bg-gray-200 dark:bg-gray-700">
+                    <div className="relative mr-2 h-8 w-8 overflow-hidden rounded-sm bg-gray-200 dark:bg-gray-700">
                         <img
                             src={nowPlaying.thumbnail_url}
                             alt={nowPlaying.song_name ?? 'Current Song'}
@@ -155,7 +155,7 @@ export function StationNowPlayingDisplay({ currentStation }: StationNowPlayingDi
                         />
                     </div>
                 ) : (
-                    <div className="mr-2 flex h-8 w-8 items-center justify-center rounded bg-gray-200 dark:bg-gray-700">
+                    <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-sm bg-gray-200 dark:bg-gray-700">
                         <span className="text-[10px] text-gray-700 dark:text-gray-300">No Img</span>
                     </div>
                 )}

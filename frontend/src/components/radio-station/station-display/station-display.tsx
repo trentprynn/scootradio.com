@@ -54,7 +54,7 @@ export function StationDisplay({ radioStation }: StationDisplayProps) {
                         onClick={() => {
                             playStation(radioStation)
                         }}
-                        className="rounded bg-blue-500 px-3 py-1 text-sm font-semibold text-white hover:bg-blue-600 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700"
+                        className="rounded-sm bg-blue-500 px-3 py-1 text-sm font-semibold text-white hover:bg-blue-600 focus:outline-hidden dark:bg-blue-600 dark:hover:bg-blue-700"
                     >
                         Play
                     </button>

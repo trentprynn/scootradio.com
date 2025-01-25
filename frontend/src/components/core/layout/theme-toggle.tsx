@@ -22,14 +22,14 @@ export function ThemeToggle() {
         <Popover className="relative inline-block">
             <PopoverButton
                 aria-label="Toggle Theme Menu"
-                className="rounded p-2 text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-gray-100 dark:hover:bg-slate-700"
+                className="rounded-sm p-2 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:ring-2 focus:ring-blue-500 dark:text-gray-100 dark:hover:bg-slate-700"
             >
                 {ButtonIcon}
             </PopoverButton>
 
             <PopoverBackdrop className="fixed inset-0" />
 
-            <PopoverPanel className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded border border-gray-200 bg-white shadow-lg dark:border-slate-600 dark:bg-slate-800">
+            <PopoverPanel className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-sm border border-gray-200 bg-white shadow-lg dark:border-slate-600 dark:bg-slate-800">
                 {({ close }) => (
                     <div className="py-1">
                         {THEME_OPTIONS.map(({ id, label, Icon }) => (
