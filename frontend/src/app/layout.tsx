@@ -1,11 +1,11 @@
-import { NavBar } from '@/components/core/layout/nav-bar'
-import { StationPlayer } from '@/components/radio-station/station-player/station-player'
+import { RadioStationPlayer } from '@/components/radio-station/radio-station-player/radio-station-player'
 import type { Metadata, Viewport } from 'next'
 
-import { ReactQueryProvider } from '@/components/core/providers/react-query-provider'
+import { ReactQueryProvider } from '@/components/providers/react-query-provider'
 import './global.css'
 
-import { ThemeProvider } from '@/components/core/providers/theme-provider'
+import { NavBar } from '@/components/layout/nav-bar/nav-bar'
+import { ThemeProvider } from '@/components/providers/theme-provider'
 
 export const metadata: Metadata = {
     title: 'scootradio.com',
@@ -42,7 +42,7 @@ export default function RootLayout({
                     <ReactQueryProvider>
                         <NavBar />
                         {children}
-                        <StationPlayer />
+                        <RadioStationPlayer />
                     </ReactQueryProvider>
                 </ThemeProvider>
             </body>

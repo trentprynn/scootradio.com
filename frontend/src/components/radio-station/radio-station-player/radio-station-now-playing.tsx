@@ -1,91 +1,19 @@
-'use client'
-
 import { useRadioStationNowPlaying } from '@/api/radio-stations/hooks/use-radio-station-now-playing'
 import { RadioStation } from '@/api/radio-stations/types/radio-station.type'
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
 import { useIsIOS } from '@/utils/hooks/use-is-ios'
 import { Popover, PopoverBackdrop, PopoverButton, PopoverPanel } from '@headlessui/react'
-import lodash from 'lodash'
+import { cloneDeep, isEqual } from 'lodash'
 import mime from 'mime'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { FaPause, FaPlay, FaStop } from 'react-icons/fa6'
 import { ImVolumeHigh, ImVolumeLow, ImVolumeMedium, ImVolumeMute2 } from 'react-icons/im'
 
-import { useEffectOnce } from 'react-use'
-
-export const StationPlayer = () => {
-    const { currentStation } = useRadioPlayerState()
-
-    return (
-        <>
-            {currentStation && <StationNowPlayingDisplay currentStation={currentStation} />}
-            {currentStation && <StationAudioPlayer key={currentStation.name} currentStation={currentStation} />}
-        </>
-    )
-}
-
-type StationAudioPlayerProps = {
+type RadioStationNowPlayingProps = {
     currentStation: RadioStation
 }
 
-const StationAudioPlayer = ({ currentStation }: StationAudioPlayerProps) => {
-    const { setLoading, pause, playing, play, volume } = useRadioPlayerState()
-
-    const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null)
-
-    useEffectOnce(() => {
-        // setup / teardown audio element
-        const audioElement = new Audio(`${currentStation.stream_url}?nocache=${Date.now()}`)
-
-        audioElement.addEventListener('play', play)
-        audioElement.addEventListener('pause', pause)
-
-        setAudioElement(audioElement)
-
-        return () => {
-            audioElement.removeEventListener('play', play)
-            audioElement.removeEventListener('pause', pause)
-            audioElement.pause()
-            audioElement.src = 'data:,'
-            audioElement.load()
-            setAudioElement(null)
-        }
-    })
-
-    useEffect(() => {
-        // play / pause sync
-        if (audioElement) {
-            if (playing) {
-                setLoading(true)
-                audioElement
-                    .play()
-                    .catch((error) => {
-                        console.error('Error playing audio:', error)
-                    })
-                    .finally(() => {
-                        setLoading(false)
-                    })
-            } else {
-                audioElement.pause()
-            }
-        }
-    }, [audioElement, playing, setLoading])
-
-    useEffect(() => {
-        // volume sync
-        if (audioElement) {
-            audioElement.volume = volume / 100 // 50 -> 0.5
-        }
-    }, [audioElement, volume])
-
-    return null
-}
-
-type StationNowPlayingDisplayProps = {
-    currentStation: RadioStation
-}
-
-export function StationNowPlayingDisplay({ currentStation }: StationNowPlayingDisplayProps) {
+export function RadioStationNowPlaying({ currentStation }: RadioStationNowPlayingProps) {
     const isIOS = useIsIOS()
 
     const { turnOff, play, pause, playing, volume, setVolume } = useRadioPlayerState()
@@ -96,9 +24,9 @@ export function StationNowPlayingDisplay({ currentStation }: StationNowPlayingDi
 
     useEffect(() => {
         if ('mediaSession' in navigator) {
-            if (lodash.isEqual(nowPlaying, lastNowPlayingRef.current)) return
+            if (isEqual(nowPlaying, lastNowPlayingRef.current)) return
 
-            lastNowPlayingRef.current = lodash.cloneDeep(nowPlaying)
+            lastNowPlayingRef.current = cloneDeep(nowPlaying)
 
             if (!nowPlaying) {
                 navigator.mediaSession.metadata = null

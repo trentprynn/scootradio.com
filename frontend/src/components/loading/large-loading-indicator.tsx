@@ -1,4 +1,4 @@
-export function FullPageLoadingIndicator() {
+export function LargeLoadingIndicator() {
     return (
         <div className="flex h-[32rem] items-center justify-center">
             <div className="flex flex-col items-center space-y-2 text-gray-600 dark:text-gray-300">

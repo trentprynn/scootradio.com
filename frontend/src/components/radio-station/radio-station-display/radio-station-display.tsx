@@ -1,16 +1,16 @@
 'use client'
 
 import { RadioStation } from '@/api/radio-stations/types/radio-station.type'
-import { AnimatedWave } from '@/components/core/animations/animated-wave'
+import { AnimatedWave } from '@/components/animations/animated-wave'
 import { useFavoriteStationsState } from '@/global-state/favorite-stations-state'
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
 import { FaRegStar, FaStar } from 'react-icons/fa6'
 
-type StationDisplayProps = {
+type RadioStationDisplayProps = {
     radioStation: RadioStation
 }
 
-export function StationDisplay({ radioStation }: StationDisplayProps) {
+export function RadioStationDisplay({ radioStation }: RadioStationDisplayProps) {
     const { currentStation, playStation } = useRadioPlayerState()
 
     const { favoriteStationNames, addFavoriteStation, removeFavoriteStation } = useFavoriteStationsState()
