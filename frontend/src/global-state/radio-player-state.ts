@@ -20,7 +20,7 @@ export const useRadioPlayerState = create<RadioPlayerState>()((set) => ({
     loading: false,
     volume: 50,
     playStation: (station: RadioStation) => {
-        set(() => ({ currentStation: station, playing: true, volume: station.starting_volume }))
+        set(() => ({ currentStation: station, playing: true, volume: 25 }))
     },
     play: () => {
         set(() => ({ playing: true }))

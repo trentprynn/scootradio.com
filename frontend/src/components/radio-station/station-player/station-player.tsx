@@ -1,16 +1,16 @@
 'use client'
 
-import { useIsIOS } from '@/api/radio-stations/hooks/use-is-ios'
 import { useRadioStationNowPlaying } from '@/api/radio-stations/hooks/use-radio-station-now-playing'
 import { RadioStation } from '@/api/radio-stations/types/radio-station.type'
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
+import { useIsIOS } from '@/utils/hooks/use-is-ios'
 import { Popover, PopoverBackdrop, PopoverButton, PopoverPanel } from '@headlessui/react'
 import lodash from 'lodash'
 import mime from 'mime'
 import { useEffect, useRef, useState } from 'react'
 import { FaPause, FaPlay, FaStop } from 'react-icons/fa6'
-
 import { ImVolumeHigh, ImVolumeLow, ImVolumeMedium, ImVolumeMute2 } from 'react-icons/im'
+
 import { useEffectOnce } from 'react-use'
 
 export const StationPlayer = () => {
@@ -29,7 +29,7 @@ type StationAudioPlayerProps = {
 }
 
 const StationAudioPlayer = ({ currentStation }: StationAudioPlayerProps) => {
-    const { setLoading, pause, playing, volume, play } = useRadioPlayerState()
+    const { setLoading, pause, playing, play, volume } = useRadioPlayerState()
 
     const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null)
 
@@ -37,22 +37,18 @@ const StationAudioPlayer = ({ currentStation }: StationAudioPlayerProps) => {
         // setup / teardown audio element
         const audioElement = new Audio(`${currentStation.stream_url}?nocache=${Date.now()}`)
 
-        audioElement.addEventListener('play', () => play())
-        audioElement.addEventListener('pause', () => pause())
+        audioElement.addEventListener('play', play)
+        audioElement.addEventListener('pause', pause)
 
         setAudioElement(audioElement)
 
         return () => {
-            audioElement.removeEventListener('play', () => play())
-            audioElement.removeEventListener('pause', () => pause())
+            audioElement.removeEventListener('play', play)
+            audioElement.removeEventListener('pause', pause)
             audioElement.pause()
             audioElement.src = 'data:,'
             audioElement.load()
             setAudioElement(null)
-
-            if ('mediaSession' in navigator) {
-                navigator.mediaSession.metadata = null
-            }
         }
     })
 
@@ -78,9 +74,7 @@ const StationAudioPlayer = ({ currentStation }: StationAudioPlayerProps) => {
     useEffect(() => {
         // volume sync
         if (audioElement) {
-            // 50 -> 0.05, audio volume above 0.1 is very loud
-            // when play live radio broadcasts
-            audioElement.volume = volume / 1000 // 50 -> 0.05
+            audioElement.volume = volume / 100 // 50 -> 0.5
         }
     }, [audioElement, volume])
 
@@ -126,6 +120,12 @@ export function StationNowPlayingDisplay({ currentStation }: StationNowPlayingDi
                 artwork: artwork,
             })
         }
+
+        return () => {
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = null
+            }
+        }
     }, [nowPlaying])
 
     const handlePlayPause = () => {
@@ -147,20 +147,23 @@ export function StationNowPlayingDisplay({ currentStation }: StationNowPlayingDi
         <div className="fixed bottom-0 w-full border-t border-gray-300 bg-gray-100 shadow-lg dark:border-gray-700 dark:bg-gray-800">
             <div className="mx-auto flex max-w-md items-center justify-between p-2 text-xs text-gray-900 dark:text-gray-100">
                 {nowPlaying?.thumbnail_url ? (
-                    <div className="relative mr-2 h-8 w-8 overflow-hidden rounded-sm bg-gray-200 dark:bg-gray-700">
+                    <div className="relative mr-2 h-[32px] w-[32px] overflow-hidden rounded-sm bg-gray-200 dark:bg-gray-700">
                         <img
                             src={nowPlaying.thumbnail_url}
                             alt={nowPlaying.song_name ?? 'Current Song'}
+                            loading="lazy"
+                            width={32}
+                            height={32}
                             className="h-full w-full object-cover"
                         />
                     </div>
                 ) : (
-                    <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-sm bg-gray-200 dark:bg-gray-700">
+                    <div className="mr-2 flex h-[32px] w-[32px] items-center justify-center overflow-hidden rounded-sm bg-gray-200 dark:bg-gray-700">
                         <span className="text-[10px] text-gray-700 dark:text-gray-300">No Img</span>
                     </div>
                 )}
 
-                <div className="flex flex-1 flex-col items-start justify-center overflow-hidden px-2">
+                <div className="flex h-[32px] flex-1 flex-col items-start justify-center overflow-hidden px-2">
                     {nowPlaying ? (
                         <>
                             <p className="w-full truncate text-sm font-semibold text-gray-900 dark:text-gray-100">

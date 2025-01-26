@@ -1,10 +1,8 @@
-'use client'
-
 import Wave from 'react-wavify'
 
 export const AnimatedWave = () => {
     return (
-        <div className="relative h-[28px] w-24 overflow-hidden rounded-sm bg-gray-200 dark:bg-gray-700">
+        <div className="relative h-[28px] w-[80px] overflow-hidden rounded-sm bg-gray-200 dark:bg-gray-700">
             <Wave
                 fill="#f79902"
                 paused={false}

@@ -6,7 +6,7 @@ import { StandardPageWrapper } from '@/components/core/layout/standard-page-wrap
 import { FullPageLoadingIndicator } from '@/components/core/loading/full-page-loading-indicator'
 import { StationDisplay } from '@/components/radio-station/station-display/station-display'
 import { useFavoriteStationsState } from '@/global-state/favorite-stations-state'
-import { getErrorMessage } from '@/utils/functions/error-handling-utils'
+import { getErrorMessage } from '@/utils/functions/error-handling'
 import { Input } from '@headlessui/react'
 import { useFormik } from 'formik'
 import lodash from 'lodash'

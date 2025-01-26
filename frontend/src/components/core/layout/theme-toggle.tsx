@@ -2,7 +2,7 @@
 
 import { Popover, PopoverBackdrop, PopoverButton, PopoverPanel } from '@headlessui/react'
 import { useTheme } from 'next-themes'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { FaCheck, FaDesktop, FaMoon, FaSun } from 'react-icons/fa6'
 
 const THEME_OPTIONS = [
@@ -12,11 +12,22 @@ const THEME_OPTIONS = [
 ] as const
 
 export function ThemeToggle() {
-    const { theme, resolvedTheme, setTheme } = useTheme()
+    const { theme, resolvedTheme, setTheme, systemTheme } = useTheme()
+
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
 
     const ButtonIcon = useMemo(() => {
         return resolvedTheme === 'dark' ? <FaMoon className="h-5 w-5" /> : <FaSun className="h-5 w-5" />
     }, [resolvedTheme])
+
+    if (!mounted) {
+        // prevents hydration mismatch error
+        return null
+    }
 
     return (
         <Popover className="relative inline-block">
@@ -41,13 +52,11 @@ export function ThemeToggle() {
                                 }}
                                 className="flex w-full items-center justify-between px-4 py-2 text-left hover:bg-gray-200 dark:hover:bg-slate-700"
                             >
-                                {/* Left side: theme icon + label */}
                                 <span className="flex items-center space-x-2">
                                     <Icon className="h-4 w-4" />
                                     <span>{label}</span>
                                 </span>
 
-                                {/* Right side: check mark if this theme is selected */}
                                 {theme === id && <FaCheck className="h-4 w-4 text-blue-600 dark:text-blue-300" />}
                             </button>
                         ))}

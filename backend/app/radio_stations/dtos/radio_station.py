@@ -9,7 +9,6 @@ class RadioStationDTO(BaseModel):
     stream_url: str
     description: str
     image_url: str
-    starting_volume: int
     playlist_url: Optional[str]
 
     class Config:
@@ -23,6 +22,5 @@ class RadioStationDTO(BaseModel):
             stream_url=orm_object.stream_url,
             description=orm_object.description,
             image_url=orm_object.image_url,
-            starting_volume=orm_object.starting_volume,
             playlist_url=orm_object.playlist_url,
         )

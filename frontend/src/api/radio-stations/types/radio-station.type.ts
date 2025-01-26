@@ -6,7 +6,6 @@ export const RadioStationSchema = z.object({
     stream_url: z.string(),
     description: z.string(),
     image_url: z.string(),
-    starting_volume: z.number(),
 })
 
 export type RadioStation = z.infer<typeof RadioStationSchema>

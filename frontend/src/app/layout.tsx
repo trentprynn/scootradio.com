@@ -5,7 +5,7 @@ import type { Metadata, Viewport } from 'next'
 import { ReactQueryProvider } from '@/components/core/providers/react-query-provider'
 import './global.css'
 
-import { ThemeProvider } from 'next-themes'
+import { ThemeProvider } from '@/components/core/providers/theme-provider'
 
 export const metadata: Metadata = {
     title: 'scootradio.com',
@@ -38,7 +38,7 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
             <body className="dark:input-slate-200 bg-white text-slate-500 antialiased dark:bg-slate-900 dark:text-slate-400">
-                <ThemeProvider attribute="class">
+                <ThemeProvider>
                     <ReactQueryProvider>
                         <NavBar />
                         {children}
