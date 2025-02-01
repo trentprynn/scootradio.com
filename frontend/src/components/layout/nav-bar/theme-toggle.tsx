@@ -33,7 +33,7 @@ export function ThemeToggle() {
         <Popover className="relative inline-block">
             <PopoverButton
                 aria-label="Toggle Theme Menu"
-                className="rounded-sm p-2 text-gray-800 hover:bg-gray-200 focus:ring-2 focus:ring-blue-500 focus:outline-hidden dark:text-gray-100 dark:hover:bg-slate-700"
+                className="cursor-pointer rounded-sm p-2 text-gray-800 hover:bg-gray-200 focus:ring-2 focus:ring-blue-500 focus:outline-hidden dark:text-gray-100 dark:hover:bg-slate-700"
             >
                 {ButtonIcon}
             </PopoverButton>

@@ -3,7 +3,7 @@ import { Popover, PopoverBackdrop, PopoverButton, PopoverPanel } from '@headless
 export function AboutPopover() {
     return (
         <Popover className="relative">
-            <PopoverButton className="block text-sm font-semibold text-gray-600 hover:text-gray-900 focus:outline-hidden dark:text-gray-300 dark:hover:text-white">
+            <PopoverButton className="block cursor-pointer text-sm font-semibold text-gray-600 hover:text-gray-900 focus:outline-hidden dark:text-gray-300 dark:hover:text-white">
                 About
             </PopoverButton>
             <PopoverBackdrop className="fixed inset-0" />

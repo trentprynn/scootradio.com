@@ -5,6 +5,7 @@ import { ReactQueryProvider } from '@/components/providers/react-query-provider'
 import './global.css'
 
 import { NavBar } from '@/components/layout/nav-bar/nav-bar'
+import { ErrorBoundaryProvider } from '@/components/providers/error-boundary-provider'
 import { ThemeProvider } from '@/components/providers/theme-provider'
 
 export const metadata: Metadata = {
@@ -14,14 +15,14 @@ export const metadata: Metadata = {
         title: 'ScootRadio',
         images: [
             {
-                url: 'https://scootradio.com/logo.png',
+                url: `${process.env.NEXT_PUBLIC_BASE_URL}/logo.png`,
             },
         ],
         description: 'ScootRadio is an ad-free way to listen to curated public radio stations.',
     },
-    manifest: 'https://scootradio.com/manifest.json',
+    manifest: `${process.env.NEXT_PUBLIC_BASE_URL}/manifest.json`,
     icons: {
-        apple: 'https://scootradio.com/logo192.png',
+        apple: `${process.env.NEXT_PUBLIC_BASE_URL}/logo192.png`,
     },
 }
 
@@ -41,7 +42,7 @@ export default function RootLayout({
                 <ThemeProvider>
                     <ReactQueryProvider>
                         <NavBar />
-                        {children}
+                        <ErrorBoundaryProvider>{children}</ErrorBoundaryProvider>
                         <RadioStationPlayer />
                     </ReactQueryProvider>
                 </ThemeProvider>

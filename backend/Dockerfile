@@ -21,3 +21,6 @@ COPY ./static /api/static
 COPY ./app /api/app
 
 CMD ["python", "/api/scripts/start.py"]
+
+HEALTHCHECK --interval=5s --timeout=3s --retries=10 --start-period=5s CMD \
+  wget -qO- http://localhost:8000/health || exit 1

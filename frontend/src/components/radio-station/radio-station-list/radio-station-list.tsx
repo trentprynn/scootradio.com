@@ -3,7 +3,7 @@
 import { useAllRadioStations } from '@/api/radio-stations/hooks/use-all-radio-stations'
 import { LargeErrorMessageDisplay } from '@/components/error-handling/large-error-message-display'
 import { LargeLoadingIndicator } from '@/components/loading/large-loading-indicator'
-import { RadioStationDisplay } from '@/components/radio-station/radio-station-display/radio-station-display'
+import { SmallRadioStationDisplay } from '@/components/radio-station/radio-station-display/small-radio-station-display'
 import { useFavoriteStationsState } from '@/global-state/favorite-stations-state'
 import { getErrorMessage } from '@/utils/functions/error-handling'
 import { Input } from '@headlessui/react'
@@ -69,12 +69,8 @@ export function RadioStationList() {
     }
 
     if (!radioStations) {
-        return (
-            <LargeErrorMessageDisplay
-                title="Failed to load radio stations"
-                description={getErrorMessage(radioStationsFetchError)}
-            />
-        )
+        const displayError = getErrorMessage(radioStationsFetchError)
+        return <LargeErrorMessageDisplay displayError={displayError} />
     }
 
     return (
@@ -100,12 +96,12 @@ export function RadioStationList() {
                 </div>
             )}
 
-            <div className="flex-column mt-5 mb-16 flex justify-center gap-y-1 p-4">
+            <div className="flex-column mb-16 flex justify-center gap-y-1 p-4">
                 <Flipper flipKey={filteredAndSortedStations.map((s) => s.name).join('')}>
                     {filteredAndSortedStations.map((radioStation) => (
                         <Flipped key={radioStation.name} flipId={radioStation.name}>
                             <div className="mt-4">
-                                <RadioStationDisplay radioStation={radioStation} />
+                                <SmallRadioStationDisplay radioStation={radioStation} />
                             </div>
                         </Flipped>
                     ))}

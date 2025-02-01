@@ -5,6 +5,8 @@ WORKDIR /app
 
 # On Railway, to access environment variables during container build, you must declare them as arguments
 # Reference: https://docs.railway.app/deploy/dockerfiles
+ARG INTERNAL_API_BASE_URL
+ARG NEXT_PUBLIC_BASE_URL
 ARG NEXT_PUBLIC_API_BASE_URL
 ARG NEXT_PUBLIC_ZOD_LOUD_FAIL_ENABLED
 

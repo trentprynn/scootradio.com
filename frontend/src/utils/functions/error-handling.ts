@@ -1,30 +1,49 @@
-import { AxiosError } from 'axios'
+import { FetchError } from '@/api/fetch-error.type'
 import { ZodError } from 'zod'
 
-export const getErrorMessage = (error: ZodError | AxiosError | string | any): string => {
+export interface DisplayError {
+    title: string
+    message?: string
+}
+
+export const getErrorMessage = (error: ZodError | FetchError | string | unknown): DisplayError => {
     try {
         if (error instanceof ZodError) {
-            return `The response from the server was invalid.`
+            return {
+                title: `The response from the server was invalid.`,
+                message: error.errors.map((error) => error.message).join(', '),
+            }
         }
 
-        if (error instanceof AxiosError) {
-            if (error.response) {
-                if (error.response.data.message && typeof error.response.data.message === 'string') {
-                    return error.response.data.message
+        if (error instanceof FetchError) {
+            if (typeof error.body === 'object' && error.body !== null) {
+                const maybeMessage = (error.body as { message?: unknown }).message
+                if (typeof maybeMessage === 'string') {
+                    return {
+                        title: error.message,
+                        message: maybeMessage,
+                    }
                 }
             }
 
-            if (error.request) {
-                return 'The request was made but no response was received.'
+            return {
+                title: error.message,
+                message: `URL: ${error.url}, Status: ${error.status}`,
             }
+        }
 
-            if (error.message && typeof error.message === 'string') {
-                return error.message
+        if (error instanceof Error) {
+            return {
+                title: 'An error occurred.',
+                message: error.message,
             }
         }
     } catch (e) {
         // NO-OP
     }
 
-    return 'An error occurred. Please try again later.'
+    return {
+        title: 'An error occurred.',
+        message: 'Please try again later.',
+    }
 }
