@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "app"
+name = "api.scootradio.com"
 version = "0.1.0"
 description = ""
 authors = ["trentprynn <trentprynn@gmail.com>"]
@@ -18,7 +18,7 @@ python = "^3.11"
 SQLAlchemy = "^2.0.30"
 alembic = "^1.13.1"
 aiocache = "^0.12.2"
-uvicorn = "^0.30.1"
+gunicorn = "^23.0.0"
 fastapi = "^0.111.0"
 psycopg = "^3.1.18"
 pydantic = "^2.6.4"

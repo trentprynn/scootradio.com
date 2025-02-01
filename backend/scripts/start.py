@@ -1,13 +1,22 @@
 import os
-import uvicorn
+import sys
+import subprocess
 
 
 def main():
-    host = "0.0.0.0"
-    reload = os.getenv("ENVIRONMENT", None) == "development"
+    host = "::"  # IPv6 bind
     port = int(os.getenv("PORT", 8000))
 
-    uvicorn.run("app.main:app", host=host, port=port, reload=reload)
+    cmd = [
+        "gunicorn",
+        "app.main:app",
+        "-k", "uvicorn.workers.UvicornWorker",
+        "--bind", f"[{host}]:{port}",
+    ]
+
+    print("Starting Gunicorn with command:", " ".join(cmd))
+    result = subprocess.run(cmd)
+    sys.exit(result.returncode)
 
 
 if __name__ == "__main__":
