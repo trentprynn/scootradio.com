@@ -1,23 +1,22 @@
-from typing import Annotated, Generator
+from typing import Annotated, AsyncGenerator
 from fastapi import Depends
-from sqlalchemy.orm import Session
-from aiocache import Cache  # type: ignore
-
-# https://github.com/aio-libs/aiocache/issues/512
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
+from aiocache import Cache  # type: ignore  # https://github.com/aio-libs/aiocache/issues/512
 from app.core.config import settings
-
 from app.core.db import engine
 
+async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
-def get_session() -> Generator[Session, None, None]:
-    with Session(engine) as session:
+
+async def get_session() -> AsyncGenerator[AsyncSession, None]:
+    async with async_session_maker() as session:
         yield session
 
 
-SessionDep = Annotated[Session, Depends(get_session)]
+SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
 
-async def get_cache() -> Cache:
+async def get_cache() -> AsyncGenerator[Cache, None]:
     cache = Cache.from_url(settings.REDIS_URL)
     try:
         yield cache

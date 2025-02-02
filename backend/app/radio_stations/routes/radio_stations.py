@@ -1,9 +1,12 @@
 from app.radio_stations.dtos.radio_station import RadioStationDTO
 from app.radio_stations.now_playing.now_playing_mapper import get_now_playing_from_model
 import structlog
-from app.core.dependencies import CacheDep, SessionDep, get_session
+from app.core.dependencies import (
+    CacheDep,
+    SessionDep,
+)
 from app.radio_stations.dtos.now_playing import NowPlayingDTO
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
 from app.radio_stations.models.radio_station import RadioStationModel
 from sqlalchemy import select
 
@@ -12,21 +15,19 @@ log = structlog.get_logger()
 router = APIRouter(
     prefix="/radio-stations",
     tags=["radio-stations"],
-    dependencies=[Depends(get_session)],
 )
 
 
 @router.get("")
-def read_all_radio_stations(session: SessionDep) -> list[RadioStationDTO]:
+async def read_all_radio_stations(session: SessionDep) -> list[RadioStationDTO]:
     """
     Read all radio stations.
     """
+    stmt = select(RadioStationModel)
+    result = await session.scalars(stmt)
+    radio_station_models = result.all()
 
-    find_stations_statement = select(RadioStationModel)
-
-    radio_station_models = session.scalars(find_stations_statement).all()
-
-    if radio_station_models is None:
+    if not radio_station_models:
         raise HTTPException(status_code=500, detail="Failed to retrieve radio stations")
 
     return [
@@ -36,14 +37,13 @@ def read_all_radio_stations(session: SessionDep) -> list[RadioStationDTO]:
 
 
 @router.get("/{name}")
-def read_radio_station(session: SessionDep, name: str) -> RadioStationDTO:
+async def read_radio_station(session: SessionDep, name: str) -> RadioStationDTO:
     """
     Read a single radio station by name.
     """
-
-    find_station_statement = select(RadioStationModel).filter_by(name=name)
-
-    radio_station_model = session.scalars(find_station_statement).first()
+    stmt = select(RadioStationModel).filter_by(name=name)
+    result = await session.scalars(stmt)
+    radio_station_model = result.first()
 
     if radio_station_model is None:
         raise HTTPException(status_code=404, detail=f"Station {name} was not found")
@@ -58,24 +58,22 @@ async def read_radio_station_now_playing(
     """
     Read now playing information for a radio station by name.
     """
-
-    now_playing_cache = await cache.get(f"${name}-now-playing")
+    cache_key = f"${name}-now-playing"
+    now_playing_cache = await cache.get(cache_key)
     if now_playing_cache:
-        now_playing_cache_dto = NowPlayingDTO(**now_playing_cache)
-        return now_playing_cache_dto
+        return NowPlayingDTO(**now_playing_cache)
 
-    find_station_statement = select(RadioStationModel).filter_by(name=name)
-
-    radio_station_model = session.scalars(find_station_statement).first()
+    stmt = select(RadioStationModel).filter_by(name=name)
+    result = await session.scalars(stmt)
+    radio_station_model = result.first()
 
     if radio_station_model is None:
         raise HTTPException(status_code=404, detail=f"Station {name} was not found")
 
     now_playing_grabber = get_now_playing_from_model(radio_station_model)
-
-    now_playing_dto = now_playing_grabber.get_now_playing()
+    now_playing_dto = await now_playing_grabber.get_now_playing()
 
     if now_playing_dto:
-        await cache.set(f"${name}-now-playing", now_playing_dto.model_dump(), ttl=10)
+        await cache.set(cache_key, now_playing_dto.model_dump(), ttl=10)
 
     return now_playing_dto

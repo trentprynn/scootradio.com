@@ -5,7 +5,7 @@ import subprocess
 log = structlog.get_logger()
 
 
-def main():
+def lint():
     log.info("running mypy")
     mypy_result = subprocess.run(
         ["mypy", "."], check=False, capture_output=True, text=True
@@ -44,6 +44,14 @@ def main():
         log.error(ruff_format.stdout)
         log.error(ruff_format.stderr)
         return
+
+
+def entrypoint():
+    lint()
+
+
+def main():
+    entrypoint()
 
 
 if __name__ == "__main__":

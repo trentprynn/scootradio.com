@@ -16,5 +16,15 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     REDIS_URL: str
 
+    @property
+    def async_database_url(self) -> str:
+        """
+        Returns a modified version of DATABASE_URL that includes '+asyncpg'
+        for asynchronous PostgreSQL support.
+        """
+        if "+asyncpg" in self.DATABASE_URL:
+            return self.DATABASE_URL
+        return self.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
+
 
 settings = Settings()

@@ -1,7 +1,7 @@
+import asyncio
 import structlog
 import subprocess
 from .wait_db import wait_db
-
 
 log = structlog.get_logger()
 
@@ -22,9 +22,13 @@ def migrate():
         log.error("Error occurred during migration: %s", e)
 
 
-def main():
-    wait_db()
+async def entrypoint() -> None:
+    await wait_db()
     migrate()
+
+
+def main():
+    asyncio.run(entrypoint())
 
 
 if __name__ == "__main__":

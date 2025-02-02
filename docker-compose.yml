@@ -24,7 +24,7 @@ services:
       - ENVIRONMENT=development
       - PORT=8000
       - API_BASE_URL=http://localhost:8000
-      - DATABASE_URL=postgres://scoot-radio-user:scoot-radio-pass@db:5432/scoot-radio
+      - DATABASE_URL=postgresql://scoot-radio-user:scoot-radio-pass@db:5432/scoot-radio
       - REDIS_URL=redis://redis:6379
     depends_on:
       db:

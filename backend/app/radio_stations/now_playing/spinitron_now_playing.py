@@ -1,8 +1,8 @@
 import structlog
-import requests
+import httpx
+from bs4 import BeautifulSoup, Tag
 from app.radio_stations.dtos.now_playing import NowPlayingDTO
 from app.radio_stations.now_playing.now_playing_base import BaseNowPlaying
-from bs4 import BeautifulSoup, Tag
 
 log = structlog.get_logger()
 
@@ -12,9 +12,10 @@ class SpinitronNowPlaying(BaseNowPlaying):
         super().__init__()
         self.station_url = station_url
 
-    def get_now_playing(self) -> NowPlayingDTO | None:
+    async def get_now_playing(self) -> NowPlayingDTO | None:
         log.info(f"Fetching now playing spinitron data for {self.station_url}")
-        response = requests.get(self.station_url)
+        async with httpx.AsyncClient() as client:
+            response = await client.get(self.station_url)
 
         if response.status_code != 200:
             log.info(
