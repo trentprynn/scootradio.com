@@ -1,22 +1,23 @@
-import os
 import sys
 import subprocess
+from app.core.config import settings
 
 
 def main():
     host = "::"  # IPv6 + IPv4 Bind
-    port = int(os.getenv("PORT", 8000))
+    port = settings.PORT
 
     cmd = [
-        "gunicorn",
+        "hypercorn",
         "app.main:app",
-        "-k",
-        "uvicorn.workers.UvicornWorker",
         "--bind",
         f"[{host}]:{port}",
     ]
 
-    print("Starting Gunicorn with command:", " ".join(cmd))
+    if settings.ENVIRONMENT == "development":
+        cmd.append("--reload")
+
+    print("Starting Hypercorn with command:", " ".join(cmd))
     result = subprocess.run(cmd)
     sys.exit(result.returncode)
 

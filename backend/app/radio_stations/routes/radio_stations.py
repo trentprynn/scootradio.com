@@ -55,6 +55,10 @@ def read_radio_station(session: SessionDep, name: str) -> RadioStationDTO:
 async def read_radio_station_now_playing(
     session: SessionDep, cache: CacheDep, name: str
 ) -> NowPlayingDTO | None:
+    """
+    Read now playing information for a radio station by name.
+    """
+
     now_playing_cache = await cache.get(f"${name}-now-playing")
     if now_playing_cache:
         now_playing_cache_dto = NowPlayingDTO(**now_playing_cache)

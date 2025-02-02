@@ -69,7 +69,7 @@ def run_migrations_online() -> None:
     configuration = config.get_section(config.config_ini_section)
     if configuration is None:
         raise Exception("Configuration section not found in the config file.")
-    configuration["sqlalchemy.url"] = str(settings.DATABASE_URL)
+    configuration["sqlalchemy.url"] = settings.DATABASE_URL
     connectable = engine_from_config(
         configuration, prefix="sqlalchemy.", poolclass=pool.NullPool
     )

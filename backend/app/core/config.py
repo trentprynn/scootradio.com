@@ -10,6 +10,7 @@ class Settings(BaseSettings):
 
     ENVIRONMENT: Literal["development", "production"]
 
+    PORT: int = 8000
     API_BASE_URL: str
 
     DATABASE_URL: str
