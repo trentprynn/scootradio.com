@@ -1,7 +1,9 @@
 from typing import Annotated, Generator
 from fastapi import Depends
 from sqlalchemy.orm import Session
-from aiocache import Cache
+from aiocache import Cache  # type: ignore
+
+# https://github.com/aio-libs/aiocache/issues/512
 from app.core.config import settings
 
 from app.core.db import engine

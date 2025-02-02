@@ -22,12 +22,9 @@ services:
       - "8000:8000"
     environment:
       - ENVIRONMENT=development
+      - PORT=8000
       - API_BASE_URL=http://localhost:8000
-      - PGHOST=db
-      - PGPORT=5432
-      - PGDATABASE=scoot-radio
-      - PGUSER=scoot-radio-user
-      - PGPASSWORD=scoot-radio-pass
+      - DATABASE_URL=postgres://scoot-radio-user:scoot-radio-pass@db:5432/scoot-radio
       - REDIS_URL=redis://redis:6379
     depends_on:
       db:
