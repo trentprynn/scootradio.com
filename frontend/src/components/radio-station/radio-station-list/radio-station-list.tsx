@@ -96,7 +96,7 @@ export function RadioStationList() {
                 </div>
             )}
 
-            <div className="flex-column mb-16 flex justify-center gap-y-1 p-4">
+            <div className="flex-column flex justify-center gap-y-1">
                 <Flipper flipKey={filteredAndSortedStations.map((s) => s.name).join('')}>
                     {filteredAndSortedStations.map((radioStation) => (
                         <Flipped key={radioStation.name} flipId={radioStation.name}>

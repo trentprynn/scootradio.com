@@ -20,19 +20,13 @@ export function LargeRadioStationDisplay({ radioStation }: LargeRadioStationDisp
 
     return (
         <>
-            <div className="mx-auto max-w-2xl overflow-hidden rounded-lg bg-white p-6 shadow-md md:max-w-3xl dark:bg-gray-800">
-                <div className="flex items-start justify-between">
-                    <div>
+            <div className="mx-auto max-w-2xl overflow-hidden rounded-lg bg-white px-4 py-3 shadow-md md:max-w-3xl dark:bg-gray-800">
+                <div>
+                    <div className="flex items-center justify-between">
                         <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-gray-100">
                             {radioStation.display_name}
                         </h1>
-                        {radioStation.description && (
-                            <p className="mt-1 text-sm text-gray-700 sm:text-base dark:text-gray-300">
-                                {radioStation.description}
-                            </p>
-                        )}
-                    </div>
-                    <div className="ml-3">
+
                         {isFavorite ? (
                             <button
                                 onClick={() => removeFavoriteStation(radioStation.name)}
@@ -51,10 +45,17 @@ export function LargeRadioStationDisplay({ radioStation }: LargeRadioStationDisp
                             </button>
                         )}
                     </div>
+
+                    {radioStation.description && (
+                        <p className="mt-1 text-sm text-gray-700 sm:text-base dark:text-gray-300">
+                            {radioStation.description}
+                        </p>
+                    )}
                 </div>
 
-                <div className="relative mt-4 w-full max-w-2xl">
+                <div className="mt-4 w-full max-w-2xl">
                     <img
+                        loading="lazy"
                         src={radioStation.image_url}
                         alt={radioStation.display_name}
                         className="mx-auto h-auto w-full rounded-md object-cover"

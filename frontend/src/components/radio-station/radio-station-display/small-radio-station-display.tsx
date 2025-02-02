@@ -30,26 +30,30 @@ export function SmallRadioStationDisplay({ radioStation }: SmallRadioStationDisp
                         alt={radioStation.display_name}
                     />
                     <div>
-                        <Link href={`/stations/${radioStation.name}`}>
-                            <p className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-                                {radioStation.display_name}
-                            </p>
-                        </Link>
+                        <div className="flex items-center justify-between">
+                            <Link href={`/stations/${radioStation.name}`}>
+                                <p className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                                    {radioStation.display_name}
+                                </p>
+                            </Link>
+                            {isFavorite ? (
+                                <button
+                                    onClick={() => removeFavoriteStation(radioStation.name)}
+                                    title="Remove favorite"
+                                >
+                                    <FaStar />
+                                </button>
+                            ) : (
+                                <button onClick={() => addFavoriteStation(radioStation.name)} title="Add favorite">
+                                    <FaRegStar />
+                                </button>
+                            )}
+                        </div>
 
                         <p className="text-sm text-gray-600 dark:text-gray-400">{radioStation.description}</p>
                     </div>
                 </div>
-                <div>
-                    {isFavorite ? (
-                        <button onClick={() => removeFavoriteStation(radioStation.name)} title="Remove favorite">
-                            <FaStar />
-                        </button>
-                    ) : (
-                        <button onClick={() => addFavoriteStation(radioStation.name)} title="Add favorite">
-                            <FaRegStar />
-                        </button>
-                    )}
-                </div>
+                <div></div>
             </div>
             <div className="mt-2 flex items-center">
                 {isCurrentStationPlaying ? (
