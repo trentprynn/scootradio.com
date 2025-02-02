@@ -20,7 +20,7 @@ export function LargeRadioStationDisplay({ radioStation }: LargeRadioStationDisp
 
     return (
         <>
-            <div className="mx-auto max-w-2xl overflow-hidden rounded-lg bg-white px-4 py-3 shadow-md md:max-w-3xl dark:bg-gray-800">
+            <div className="mx-auto max-w-2xl overflow-hidden rounded-lg bg-slate-100 px-4 py-3 shadow-md md:max-w-3xl dark:bg-gray-800">
                 <div>
                     <div className="flex items-center justify-between">
                         <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-gray-100">
