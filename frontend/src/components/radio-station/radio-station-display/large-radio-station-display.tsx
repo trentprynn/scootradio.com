@@ -5,6 +5,7 @@ import { AnimatedWave } from '@/components/animations/animated-wave'
 import { useFavoriteStationsState } from '@/global-state/favorite-stations-state'
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
 import { Button } from '@headlessui/react'
+import { useMemo } from 'react'
 import { FaRegStar, FaStar } from 'react-icons/fa6'
 
 type LargeRadioStationDisplayProps = {
@@ -17,6 +18,14 @@ export function LargeRadioStationDisplay({ radioStation }: LargeRadioStationDisp
 
     const isFavorite = favoriteStationNames.includes(radioStation.name)
     const isCurrentStationPlaying = currentStation?.name === radioStation.name
+
+    const message = useMemo(() => {
+        if (radioStation.description) {
+            return `${radioStation.description} Listen online for free powered by ScootRadio.`
+        }
+
+        return `Listen to ${radioStation.display_name} online for free powered by ScootRadio.`
+    }, [radioStation])
 
     return (
         <>
@@ -46,11 +55,7 @@ export function LargeRadioStationDisplay({ radioStation }: LargeRadioStationDisp
                         )}
                     </div>
 
-                    {radioStation.description && (
-                        <p className="mt-1 text-sm text-gray-700 sm:text-base dark:text-gray-300">
-                            {radioStation.description}
-                        </p>
-                    )}
+                    {message}
                 </div>
 
                 <div className="mt-4 w-full max-w-2xl">
