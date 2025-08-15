@@ -1,5 +1,5 @@
 import { fetchRadioStationNowPlaying } from '@/api/radio-stations/fetchers/fetch-radio-station-now-playing'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 export const useRadioStationNowPlaying = (stationName: string) => {
     return useQuery({

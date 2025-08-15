@@ -20,6 +20,7 @@ def lint():
     ruff_lint = subprocess.run(
         [
             "ruff",
+            "check",
             "--fix",
         ],
         check=False,

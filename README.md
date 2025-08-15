@@ -7,6 +7,10 @@ ScootRadio is a free, open source web application for streaming public radio.
 ## Why
 I wanted a PWA that allowed simple streaming of my favorite public radio stations.
 
+## Run Locally
+1. clone repository, navigate into it
+2. `docker compose up --build`
+
 ## Local Development
 1. clone the repository
 2. Run the backend

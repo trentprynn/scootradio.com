@@ -1,6 +1,7 @@
 import pendulum
 import structlog
 import httpx
+from pendulum import Date, Time, DateTime, Duration  # <-- import types
 from app.core.constants import KEXP_NOW_PLAYING_URL
 from app.radio_stations.dtos.now_playing import NowPlayingDTO
 from app.radio_stations.now_playing.now_playing_base import BaseNowPlaying
@@ -23,12 +24,17 @@ class KEXPNowPlaying(BaseNowPlaying):
             song = now_playing.get("song")
             artist = now_playing.get("artist")
             album = now_playing.get("album")
-            play_time = now_playing.get("airdate")
+            play_time_raw = now_playing.get("airdate")
             thumbnail = now_playing.get("image_uri")
 
-            if play_time:
-                play_time = pendulum.parse(play_time)
-                play_time = play_time.strftime("%-I:%M %p")
+            play_time: str | None = None
+            if play_time_raw:
+                parsed = pendulum.parse(play_time_raw)
+                if isinstance(parsed, (DateTime, Date, Time)):
+                    play_time = parsed.strftime("%-I:%M %p")
+                elif isinstance(parsed, Duration):
+                    # failed to parse play time
+                    play_time = None
 
             return NowPlayingDTO(
                 song_name=song,
@@ -37,6 +43,6 @@ class KEXPNowPlaying(BaseNowPlaying):
                 play_time=play_time,
                 thumbnail_url=thumbnail,
             )
-        else:
-            log.info(f"Failed to fetch now playing data: HTTP {response.status_code}")
-            return None
+
+        log.info(f"Failed to fetch now playing data: HTTP {response.status_code}")
+        return None

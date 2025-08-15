@@ -1,7 +1,10 @@
-.PHONY: save-deps install start lint create-migration migrate migrate-down seed
+.PHONY: save-deps outdated install start lint create-migration migrate migrate-down seed
 
 save-deps:
 	poetry lock && poetry install --sync
+
+outdated:
+	poetry show --outdated --top-level
 
 install:
 	poetry install --sync
