@@ -39,34 +39,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata | vo
 
 export default async function Page({ params }: { params: Promise<{ name: string }> }) {
     const stationName = (await params).name
+    const radioStationResult = await fetchRadioStation(stationName, {
+        cache: 'force-cache',
+    }).catch((error) => error)
 
-    try {
-        const radioStation = await fetchRadioStation(stationName, {
-            cache: 'force-cache',
-        })
-
-        return (
-            <StandardPageWrapper>
-                <div className="flex flex-col items-center justify-center">
-                    <div className="w-full max-w-2xl">
-                        <div className="mb-4">
-                            <Link href="/">
-                                <Button className="mt-2 cursor-pointer rounded-md bg-emerald-400 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600 focus:outline-none sm:mt-0 dark:bg-emerald-400 dark:hover:bg-emerald-600">
-                                    <div className="flex items-center gap-2">
-                                        <IoMdArrowRoundBack size={20} />
-                                        <span>More Stations</span>
-                                    </div>
-                                </Button>
-                            </Link>
-                        </div>
-
-                        <LargeRadioStationDisplay radioStation={radioStation} />
-                    </div>
-                </div>
-            </StandardPageWrapper>
-        )
-    } catch (error) {
-        const displayError = getErrorMessage(error)
+    if (radioStationResult instanceof Error) {
+        const displayError = getErrorMessage(radioStationResult)
         return <LargeErrorMessageDisplay displayError={displayError} />
     }
+
+    return (
+        <StandardPageWrapper>
+            <div className="flex flex-col items-center justify-center">
+                <div className="w-full max-w-2xl">
+                    <div className="mb-4">
+                        <Link href="/">
+                            <Button className="mt-2 cursor-pointer rounded-md bg-emerald-400 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600 focus:outline-none sm:mt-0 dark:bg-emerald-400 dark:hover:bg-emerald-600">
+                                <div className="flex items-center gap-2">
+                                    <IoMdArrowRoundBack size={20} />
+                                    <span>More Stations</span>
+                                </div>
+                            </Button>
+                        </Link>
+                    </div>
+
+                    <LargeRadioStationDisplay radioStation={radioStationResult} />
+                </div>
+            </div>
+        </StandardPageWrapper>
+    )
 }

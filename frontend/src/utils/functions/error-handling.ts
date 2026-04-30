@@ -11,7 +11,7 @@ export const getErrorMessage = (error: ZodError | FetchError | string | unknown)
         if (error instanceof ZodError) {
             return {
                 title: `The response from the server was invalid.`,
-                message: error.message
+                message: error.message,
             }
         }
 

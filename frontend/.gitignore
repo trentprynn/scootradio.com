@@ -12,4 +12,4 @@ out
 .DS_Store
 
 # debug files
-yarn-error.log
+npm-debug.log*

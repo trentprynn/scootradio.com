@@ -1,16 +1,20 @@
 import { RadioStation } from '@/api/radio-stations/types/radio-station.type'
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useEffectOnce } from 'react-use'
 
 type RadioStationAudioPlayerProps = {
     currentStation: RadioStation
 }
 
+function isInterruptedPlayError(error: unknown) {
+    return error instanceof DOMException && error.name === 'AbortError'
+}
+
 export const RadioStationAudioPlayer = ({ currentStation }: RadioStationAudioPlayerProps) => {
     const { setLoading, pause, playing, play, volume } = useRadioPlayerState()
 
-    const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null)
+    const audioElementRef = useRef<HTMLAudioElement | null>(null)
 
     useEffectOnce(() => {
         // setup / teardown audio element
@@ -19,7 +23,7 @@ export const RadioStationAudioPlayer = ({ currentStation }: RadioStationAudioPla
         audioElement.addEventListener('play', play)
         audioElement.addEventListener('pause', pause)
 
-        setAudioElement(audioElement)
+        audioElementRef.current = audioElement
 
         return () => {
             audioElement.removeEventListener('play', play)
@@ -27,18 +31,23 @@ export const RadioStationAudioPlayer = ({ currentStation }: RadioStationAudioPla
             audioElement.pause()
             audioElement.src = 'data:,'
             audioElement.load()
-            setAudioElement(null)
+            audioElementRef.current = null
         }
     })
 
     useEffect(() => {
         // play / pause sync
+        const audioElement = audioElementRef.current
         if (audioElement) {
             if (playing) {
                 setLoading(true)
                 audioElement
                     .play()
                     .catch((error) => {
+                        if (isInterruptedPlayError(error)) {
+                            return
+                        }
+
                         console.error('Error playing audio:', error)
                     })
                     .finally(() => {
@@ -48,14 +57,15 @@ export const RadioStationAudioPlayer = ({ currentStation }: RadioStationAudioPla
                 audioElement.pause()
             }
         }
-    }, [audioElement, playing, setLoading])
+    }, [playing, setLoading])
 
     useEffect(() => {
         // volume sync
+        const audioElement = audioElementRef.current
         if (audioElement) {
             audioElement.volume = volume / 100 // 50 -> 0.5
         }
-    }, [audioElement, volume])
+    }, [volume])
 
     return null
 }

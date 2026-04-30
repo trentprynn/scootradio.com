@@ -3,6 +3,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      target: dev
     ports:
       - "3000:3000"
     environment:
@@ -10,6 +11,11 @@ services:
       - NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
       - NEXT_PUBLIC_ZOD_LOUD_FAIL_ENABLED=true
       - INTERNAL_API_BASE_URL=http://backend:8000
+      - WATCHPACK_POLLING=true
+    volumes:
+      - ./frontend:/app
+      - frontend-node-modules:/app/node_modules
+      - frontend-next:/app/.next
     depends_on:
       backend:
         condition: service_healthy
@@ -26,6 +32,8 @@ services:
       - API_BASE_URL=http://localhost:8000
       - DATABASE_URL=postgresql://scoot-radio-user:scoot-radio-pass@db:5432/scoot-radio
       - REDIS_URL=redis://redis:6379
+    volumes:
+      - ./backend:/api
     depends_on:
       db:
         condition: service_healthy
@@ -65,3 +73,7 @@ volumes:
     name: scoot-radio-db
   scoot-radio-redis:
     name: scoot-radio-redis
+  frontend-node-modules:
+    name: scoot-radio-frontend-node-modules
+  frontend-next:
+    name: scoot-radio-frontend-next

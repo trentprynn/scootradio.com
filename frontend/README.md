@@ -4,10 +4,10 @@ Repository for the source code of scootradio.com
 ## Run and develop locally
 1. clone the repository
 2. navigate into it 
-3. run `yarn`
+3. run `npm install`
     - installs dependencies
 4. setup `.env` file with expected values (`cp .env.sample .env`)
-5. run `yarn dev`
+5. run `npm run dev`
     - runs application with hot reloading enabled
 
 ## Deployment
