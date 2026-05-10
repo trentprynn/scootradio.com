@@ -1,4 +1,5 @@
 import { RadioStationPlayer } from '@/components/radio-station/radio-station-player/radio-station-player'
+import { GoogleAnalytics } from '@next/third-parties/google'
 import type { Metadata, Viewport } from 'next'
 
 import { ReactQueryProvider } from '@/components/providers/react-query-provider'
@@ -47,6 +48,7 @@ export default function RootLayout({
                     </ReactQueryProvider>
                 </ThemeProvider>
             </body>
+            {process.env.NODE_ENV === 'production' ? <GoogleAnalytics gaId="G-MW49FD8FC4" /> : null}
         </html>
     )
 }

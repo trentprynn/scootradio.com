@@ -35,6 +35,14 @@ seed_radio_stations: list[RadioStationModel] = [
         image_url=f"{settings.API_BASE_URL}/static/station-logos/kxlu.png",
         playlist_url="https://spinitron.com/KXLU/",
     ),
+    RadioStationModel(
+        name=RadioStationName.KUOM.value,
+        display_name="Radio K",
+        stream_url="https://radiok.broadcasttool.stream/play_256",
+        description="Radio K (KUOM) is the student-run radio station of the University of Minnesota.",
+        image_url=f"{settings.API_BASE_URL}/static/station-logos/kuom.jpg",
+        playlist_url="https://spinitron.com/KUOM/",
+    ),
 ]
 
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)

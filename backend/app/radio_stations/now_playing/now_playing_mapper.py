@@ -13,6 +13,9 @@ def get_now_playing_from_model(model: RadioStationModel) -> BaseNowPlaying:
         case RadioStationName.KXLU.value:
             if model.playlist_url:
                 return SpinitronNowPlaying(model.playlist_url)
+        case RadioStationName.KUOM.value:
+            if model.playlist_url:
+                return SpinitronNowPlaying(model.playlist_url)
         case RadioStationName.KEXP.value:
             return KEXPNowPlaying()
 

@@ -1,3 +1,4 @@
+# BASE DEPENDENCIES
 FROM node:24 AS base
 
 WORKDIR /app
@@ -8,16 +9,18 @@ COPY package.json package-lock.json ./
 
 RUN npm ci
 
+# DEVELOPMENT (HOT RELOADING)
 FROM base AS dev
 
 COPY . .
 
-CMD ["npm", "run", "dev", "--", "--hostname", "0.0.0.0"]
+CMD ["sh", "-c", "npm ci && npm run dev -- --hostname 0.0.0.0 --webpack"]
 
+# PRODUCTION BUILD
 FROM base AS builder
 
-# On Railway, to access environment variables during container build, you must declare them as arguments
-# Reference: https://docs.railway.app/deploy/dockerfiles
+# Railway build-time variables must be declared as ARGs in the stage where they are used
+# Reference: https://docs.railway.com/builds/dockerfiles#using-variables-at-build-time
 ARG INTERNAL_API_BASE_URL
 ARG NEXT_PUBLIC_BASE_URL
 ARG NEXT_PUBLIC_API_BASE_URL
@@ -27,6 +30,7 @@ COPY . .
 
 RUN npm run build
 
+# PRODUCTION RUNTIME
 FROM node:24 AS runner
 
 ENV NODE_ENV=production

@@ -1,6 +1,7 @@
 import nextCoreWebVitals from 'eslint-config-next/core-web-vitals'
+import { defineConfig } from 'eslint/config'
 
-export default [
+export default defineConfig([
     ...nextCoreWebVitals,
     {
         rules: {
@@ -8,4 +9,4 @@ export default [
             '@next/next/no-img-element': 'off',
         },
     },
-]
+])

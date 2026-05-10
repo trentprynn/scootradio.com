@@ -6,7 +6,9 @@ node_modules
 
 # nextjs build output
 .next
+next-env.d.ts
 out
+*.tsbuildinfo
 
 # macos files
 .DS_Store

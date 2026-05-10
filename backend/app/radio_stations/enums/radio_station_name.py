@@ -5,3 +5,4 @@ class RadioStationName(Enum):
     KXCI = "kxci"
     KEXP = "kexp"
     KXLU = "kxlu"
+    KUOM = "kuom"
