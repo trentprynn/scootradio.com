@@ -48,7 +48,7 @@ export default function RootLayout({
                     </ReactQueryProvider>
                 </ThemeProvider>
             </body>
-            {process.env.NODE_ENV === 'production' ? <GoogleAnalytics gaId="G-MW49FD8FC4" /> : null}
+            {process.env.NODE_ENV === 'production' ? <GoogleAnalytics gaId="G-WM49FD8FC4" /> : null}
         </html>
     )
 }
