@@ -1,10 +1,9 @@
 'use client'
 
 import { RadioStation } from '@/api/radio-stations/types/radio-station.type'
-import { AnimatedWave } from '@/components/animations/animated-wave'
+import { RadioStationPlayButton } from '@/components/radio-station/radio-station-display/radio-station-play-button'
 import { useFavoriteStationsState } from '@/global-state/favorite-stations-state'
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
-import { Button } from '@headlessui/react'
 import Link from 'next/link'
 import { FaRegStar, FaStar } from 'react-icons/fa6'
 
@@ -56,18 +55,11 @@ export function SmallRadioStationDisplay({ radioStation }: SmallRadioStationDisp
                 <div></div>
             </div>
             <div className="mt-2 flex items-center">
-                {isCurrentStationPlaying ? (
-                    <AnimatedWave />
-                ) : (
-                    <Button
-                        onClick={() => {
-                            playStation(radioStation)
-                        }}
-                        className="w-[80px] cursor-pointer rounded-sm bg-blue-500 px-3 py-1 text-sm font-semibold text-white hover:bg-blue-600 focus:outline-hidden dark:bg-blue-600 dark:hover:bg-blue-700"
-                    >
-                        Play
-                    </Button>
-                )}
+                <RadioStationPlayButton
+                    isPlaying={isCurrentStationPlaying}
+                    onPlay={() => playStation(radioStation)}
+                    label="Play"
+                />
             </div>
         </div>
     )

@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.fast_api_handlers import lifespan, exception_handler
+from app.core.request_logging import RequestLoggingMiddleware
 from fastapi.staticfiles import StaticFiles
 from app.radio_stations.routes.radio_stations import router as RadioStationRouter
 from app.base.routes.root import router as RootRouter
@@ -16,6 +17,7 @@ app = FastAPI(
 
 origins = ["https://scootradio.com", "http://localhost:3000"]
 
+app.add_middleware(RequestLoggingMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
