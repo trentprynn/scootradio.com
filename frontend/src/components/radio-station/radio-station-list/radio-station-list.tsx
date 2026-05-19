@@ -1,24 +1,19 @@
 'use client'
 
-import { useAllRadioStations } from '@/api/radio-stations/hooks/use-all-radio-stations'
-import { LargeErrorMessageDisplay } from '@/components/error-handling/large-error-message-display'
-import { LargeLoadingIndicator } from '@/components/loading/large-loading-indicator'
+import type { RadioStation } from '@/api/radio-stations/types/radio-station.type'
 import { SmallRadioStationDisplay } from '@/components/radio-station/radio-station-display/small-radio-station-display'
 import { useFavoriteStationsState } from '@/global-state/favorite-stations-state'
-import { getErrorMessage } from '@/utils/functions/error-handling'
 import { Input } from '@headlessui/react'
 import { useFormik } from 'formik'
 import lodash from 'lodash'
 import { useMemo } from 'react'
 import { Flipped, Flipper } from 'react-flip-toolkit'
 
-export function RadioStationList() {
-    const {
-        data: radioStations,
-        error: radioStationsFetchError,
-        isLoading: radioStationsLoading,
-    } = useAllRadioStations()
+type RadioStationListProps = {
+    radioStations: RadioStation[]
+}
 
+export function RadioStationList({ radioStations }: RadioStationListProps) {
     const { favoriteStationNames } = useFavoriteStationsState()
 
     const formik = useFormik({
@@ -32,10 +27,6 @@ export function RadioStationList() {
     })
 
     const filteredAndSortedStations = useMemo(() => {
-        if (!radioStations) {
-            return []
-        }
-
         let stations = lodash.cloneDeep(radioStations)
 
         stations.sort((a, b) => {
@@ -63,15 +54,6 @@ export function RadioStationList() {
 
         return stations
     }, [radioStations, favoriteStationNames, formik.values.search])
-
-    if (radioStationsLoading) {
-        return <LargeLoadingIndicator />
-    }
-
-    if (!radioStations) {
-        const displayError = getErrorMessage(radioStationsFetchError)
-        return <LargeErrorMessageDisplay displayError={displayError} />
-    }
 
     return (
         <>

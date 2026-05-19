@@ -1,14 +1,13 @@
 import { fetchAllRadioStations } from '@/api/radio-stations/fetchers/fetch-all-radio-stations'
+import { SITE_URL } from '@/config/app-settings'
 import type { MetadataRoute } from 'next'
-
-const siteUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://scootradio.com'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const radioStations = await fetchAllRadioStations({ cache: 'no-store' })
 
     const radioStationPageSitemapEntities = radioStations.map((station) => {
         return {
-            url: `${siteUrl}/stations/${station.name}`,
+            url: `${SITE_URL}/stations/${station.name}`,
             lastModified: new Date(station.content_updated_at),
             changeFrequency: 'monthly' as const,
             priority: 0.8,
@@ -28,7 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return [
         // homepage
         {
-            url: siteUrl,
+            url: SITE_URL,
             lastModified: homeLastModified,
             changeFrequency: 'weekly',
             priority: 1,

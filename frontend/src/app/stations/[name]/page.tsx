@@ -4,6 +4,7 @@ import type { RadioStation } from '@/api/radio-stations/types/radio-station.type
 import { LargeErrorMessageDisplay } from '@/components/error-handling/large-error-message-display'
 import { StandardPageWrapper } from '@/components/layout/standard-page-wrapper'
 import { LargeRadioStationDisplay } from '@/components/radio-station/radio-station-display/large-radio-station-display'
+import { SITE_URL } from '@/config/app-settings'
 import { getErrorMessage } from '@/utils/functions/error-handling'
 import { Button } from '@headlessui/react'
 import type { Metadata } from 'next'
@@ -15,8 +16,6 @@ import { IoMdArrowRoundBack } from 'react-icons/io'
 type Props = {
     params: Promise<{ name: string }>
 }
-
-const siteUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://scootradio.com'
 
 const getRadioStation = cache((stationName: string) => {
     return fetchRadioStation(stationName, {
@@ -30,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata | vo
     try {
         const station = await getRadioStation(stationName)
 
-        const stationUrl = `${siteUrl}/stations/${station.name}`
+        const stationUrl = `${SITE_URL}/stations/${station.name}`
         const title = `${station.seo_title} | ScootRadio`
 
         return {
@@ -97,7 +96,7 @@ export default async function Page({ params }: { params: Promise<{ name: string 
                         name: radioStationResult.display_name,
                         alternateName: radioStationResult.call_sign,
                         description: radioStationResult.long_description,
-                        url: `${siteUrl}/stations/${radioStationResult.name}`,
+                        url: `${SITE_URL}/stations/${radioStationResult.name}`,
                         image: radioStationResult.image_url,
                         dateModified: radioStationResult.content_updated_at,
                         areaServed: `${radioStationResult.city}, ${radioStationResult.region}`,

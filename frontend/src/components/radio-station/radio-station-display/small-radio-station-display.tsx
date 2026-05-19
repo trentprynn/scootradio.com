@@ -1,11 +1,10 @@
 'use client'
 
 import { RadioStation } from '@/api/radio-stations/types/radio-station.type'
+import { RadioStationFavoriteButton } from '@/components/radio-station/radio-station-display/radio-station-favorite-button'
 import { RadioStationPlayButton } from '@/components/radio-station/radio-station-display/radio-station-play-button'
-import { useFavoriteStationsState } from '@/global-state/favorite-stations-state'
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
 import Link from 'next/link'
-import { FaRegStar, FaStar } from 'react-icons/fa6'
 
 type SmallRadioStationDisplayProps = {
     radioStation: RadioStation
@@ -14,9 +13,6 @@ type SmallRadioStationDisplayProps = {
 export function SmallRadioStationDisplay({ radioStation }: SmallRadioStationDisplayProps) {
     const { currentStation, playStation } = useRadioPlayerState()
 
-    const { favoriteStationNames, addFavoriteStation, removeFavoriteStation } = useFavoriteStationsState()
-
-    const isFavorite = favoriteStationNames.includes(radioStation.name)
     const isCurrentStationPlaying = currentStation?.name === radioStation.name
 
     return (
@@ -35,18 +31,7 @@ export function SmallRadioStationDisplay({ radioStation }: SmallRadioStationDisp
                                     {radioStation.display_name}
                                 </p>
                             </Link>
-                            {isFavorite ? (
-                                <button
-                                    onClick={() => removeFavoriteStation(radioStation.name)}
-                                    title="Remove favorite"
-                                >
-                                    <FaStar />
-                                </button>
-                            ) : (
-                                <button onClick={() => addFavoriteStation(radioStation.name)} title="Add favorite">
-                                    <FaRegStar />
-                                </button>
-                            )}
+                            <RadioStationFavoriteButton radioStationName={radioStation.name} size="sm" />
                         </div>
 
                         <p className="text-sm text-gray-600 dark:text-gray-400">{radioStation.description}</p>

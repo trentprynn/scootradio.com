@@ -8,22 +8,24 @@ import './global.css'
 import { NavBar } from '@/components/layout/nav-bar/nav-bar'
 import { ErrorBoundaryProvider } from '@/components/providers/error-boundary-provider'
 import { ThemeProvider } from '@/components/providers/theme-provider'
+import { SITE_URL } from '@/config/app-settings'
 
 export const metadata: Metadata = {
+    metadataBase: new URL(SITE_URL),
     title: 'scootradio.com',
     description: 'ScootRadio is an ad-free way to listen to curated public radio stations.',
     openGraph: {
         title: 'ScootRadio',
         images: [
             {
-                url: `${process.env.NEXT_PUBLIC_BASE_URL}/logo.png`,
+                url: `${SITE_URL}/logo.png`,
             },
         ],
         description: 'ScootRadio is an ad-free way to listen to curated public radio stations.',
     },
-    manifest: `${process.env.NEXT_PUBLIC_BASE_URL}/manifest.json`,
+    manifest: `${SITE_URL}/manifest.webmanifest`,
     icons: {
-        apple: `${process.env.NEXT_PUBLIC_BASE_URL}/logo192.png`,
+        apple: `${SITE_URL}/logo192.png`,
     },
 }
 

@@ -1,10 +1,10 @@
 'use client'
 
 import { RadioStation } from '@/api/radio-stations/types/radio-station.type'
+import { RadioStationFavoriteButton } from '@/components/radio-station/radio-station-display/radio-station-favorite-button'
 import { RadioStationPlayButton } from '@/components/radio-station/radio-station-display/radio-station-play-button'
-import { useFavoriteStationsState } from '@/global-state/favorite-stations-state'
 import { useRadioPlayerState } from '@/global-state/radio-player-state'
-import { FaArrowUpRightFromSquare, FaRegStar, FaStar } from 'react-icons/fa6'
+import { FaArrowUpRightFromSquare } from 'react-icons/fa6'
 
 type LargeRadioStationDisplayProps = {
     radioStation: RadioStation
@@ -12,9 +12,7 @@ type LargeRadioStationDisplayProps = {
 
 export function LargeRadioStationDisplay({ radioStation }: LargeRadioStationDisplayProps) {
     const { currentStation, playStation } = useRadioPlayerState()
-    const { favoriteStationNames, addFavoriteStation, removeFavoriteStation } = useFavoriteStationsState()
 
-    const isFavorite = favoriteStationNames.includes(radioStation.name)
     const isCurrentStationPlaying = currentStation?.name === radioStation.name
     const shouldShowCallSignEyebrow = radioStation.call_sign !== radioStation.display_name
 
@@ -48,25 +46,7 @@ export function LargeRadioStationDisplay({ radioStation }: LargeRadioStationDisp
                         </p>
                     </div>
 
-                    {isFavorite ? (
-                        <button
-                            onClick={() => removeFavoriteStation(radioStation.name)}
-                            className="rounded-sm p-1 text-yellow-500 hover:opacity-80 dark:text-yellow-400"
-                            title="Remove from favorites"
-                            aria-label="Remove from favorites"
-                        >
-                            <FaStar size={24} />
-                        </button>
-                    ) : (
-                        <button
-                            onClick={() => addFavoriteStation(radioStation.name)}
-                            className="rounded-sm p-1 text-gray-500 hover:text-yellow-400 dark:text-gray-200"
-                            title="Add to favorites"
-                            aria-label="Add to favorites"
-                        >
-                            <FaRegStar size={24} />
-                        </button>
-                    )}
+                    <RadioStationFavoriteButton radioStationName={radioStation.name} />
                 </div>
 
                 <p className="mt-4 max-w-2xl text-sm leading-6 text-gray-600 sm:text-base dark:text-gray-300">
