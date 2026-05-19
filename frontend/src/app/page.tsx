@@ -1,11 +1,7 @@
 import { fetchAllRadioStations } from '@/api/radio-stations/fetchers/fetch-all-radio-stations'
-import type { RadioStation } from '@/api/radio-stations/types/radio-station.type'
-import { LargeErrorMessageDisplay } from '@/components/error-handling/large-error-message-display'
 import { StandardPageWrapper } from '@/components/layout/standard-page-wrapper'
 import { RadioStationList } from '@/components/radio-station/radio-station-list/radio-station-list'
 import { SITE_URL } from '@/config/app-settings'
-import type { DisplayError } from '@/utils/functions/error-handling'
-import { getErrorMessage } from '@/utils/functions/error-handling'
 import type { Metadata } from 'next'
 
 export const revalidate = 3600 // 1hr
@@ -45,30 +41,15 @@ export const metadata: Metadata = {
 }
 
 export default async function Home() {
-    let radioStations: RadioStation[] | null = null
-    let displayError: DisplayError | null = null
-
-    try {
-        radioStations = await fetchAllRadioStations({
-            next: {
-                revalidate,
-            },
-        })
-    } catch (error) {
-        displayError = getErrorMessage(error)
-    }
-
-    if (displayError) {
-        return (
-            <StandardPageWrapper>
-                <LargeErrorMessageDisplay displayError={displayError} />
-            </StandardPageWrapper>
-        )
-    }
+    const radioStations = await fetchAllRadioStations({
+        next: {
+            revalidate,
+        },
+    })
 
     return (
         <StandardPageWrapper>
-            <RadioStationList radioStations={radioStations ?? []} />
+            <RadioStationList radioStations={radioStations} />
         </StandardPageWrapper>
     )
 }

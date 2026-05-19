@@ -1,11 +1,9 @@
 import { FetchError } from '@/api/fetch-error.type'
+import { fetchAllRadioStations } from '@/api/radio-stations/fetchers/fetch-all-radio-stations'
 import { fetchRadioStation } from '@/api/radio-stations/fetchers/fetch-radio-station'
-import type { RadioStation } from '@/api/radio-stations/types/radio-station.type'
-import { LargeErrorMessageDisplay } from '@/components/error-handling/large-error-message-display'
 import { StandardPageWrapper } from '@/components/layout/standard-page-wrapper'
 import { LargeRadioStationDisplay } from '@/components/radio-station/radio-station-display/large-radio-station-display'
 import { SITE_URL } from '@/config/app-settings'
-import { getErrorMessage } from '@/utils/functions/error-handling'
 import { Button } from '@headlessui/react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -17,11 +15,27 @@ type Props = {
     params: Promise<{ name: string }>
 }
 
+export const revalidate = 3600 // 1hr
+
 const getRadioStation = cache((stationName: string) => {
     return fetchRadioStation(stationName, {
-        cache: 'no-store',
+        next: {
+            revalidate,
+        },
     })
 })
+
+export async function generateStaticParams() {
+    const stations = await fetchAllRadioStations({
+        next: {
+            revalidate,
+        },
+    })
+
+    return stations.map((station) => ({
+        name: station.name,
+    }))
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata | void> {
     const stationName = (await params).name
@@ -66,24 +80,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata | vo
         if (error instanceof FetchError && error.status === 404) {
             return notFound()
         }
-        return
+
+        throw error
     }
 }
 
 export default async function Page({ params }: { params: Promise<{ name: string }> }) {
     const stationName = (await params).name
-    let radioStationResult: RadioStation
-
-    try {
-        radioStationResult = await getRadioStation(stationName)
-    } catch (error) {
+    const radioStationResult = await getRadioStation(stationName).catch((error) => {
         if (error instanceof FetchError && error.status === 404) {
             notFound()
         }
 
-        const displayError = getErrorMessage(error)
-        return <LargeErrorMessageDisplay displayError={displayError} />
-    }
+        throw error
+    })
 
     return (
         <StandardPageWrapper>

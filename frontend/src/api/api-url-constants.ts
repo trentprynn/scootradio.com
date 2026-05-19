@@ -1,6 +1,4 @@
-// process.env.INTERNAL_API_BASE_URL -> used during internal SSR calls
-// process.env.NEXT_PUBLIC_API_BASE_URL -> used during client-side calls
-const API_BASE_URL = process.env.INTERNAL_API_BASE_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'MISSING_API_BASE_URL'
+import { API_BASE_URL } from '@/config/app-settings'
 
 export const API_URLS = {
     radio_stations: {
