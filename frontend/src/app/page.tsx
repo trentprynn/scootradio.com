@@ -8,7 +8,7 @@ import type { DisplayError } from '@/utils/functions/error-handling'
 import { getErrorMessage } from '@/utils/functions/error-handling'
 import type { Metadata } from 'next'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600 // 1hr
 
 const title = 'ScootRadio | Public Radio Streaming'
 const description = 'ScootRadio is an ad-free way to listen to curated public radio stations.'
@@ -50,7 +50,9 @@ export default async function Home() {
 
     try {
         radioStations = await fetchAllRadioStations({
-            cache: 'no-store',
+            next: {
+                revalidate,
+            },
         })
     } catch (error) {
         displayError = getErrorMessage(error)
