@@ -6,10 +6,10 @@ export function AboutPopover() {
             <PopoverButton className="block cursor-pointer text-sm font-semibold text-gray-600 hover:text-gray-900 focus:outline-hidden dark:text-gray-300 dark:hover:text-white">
                 About
             </PopoverButton>
-            <PopoverBackdrop className="fixed inset-0" />
+            <PopoverBackdrop className="fixed inset-0 z-40" />
             <PopoverPanel
                 transition
-                className="absolute right-0 mt-2 w-60 rounded-xl border border-gray-200 bg-white text-sm shadow-lg ring-1 ring-black/5 focus:outline-hidden dark:border-gray-700 dark:bg-gray-800 dark:ring-white/10"
+                className="absolute right-0 z-50 mt-2 w-60 rounded-xl border border-gray-200 bg-white text-sm shadow-lg ring-1 ring-black/5 focus:outline-hidden dark:border-gray-700 dark:bg-gray-800 dark:ring-white/10"
             >
                 <div className="space-y-2 p-3">
                     <a

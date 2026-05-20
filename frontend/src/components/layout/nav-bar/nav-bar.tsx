@@ -4,7 +4,7 @@ import { ThemeToggle } from './theme-toggle'
 
 export function NavBar() {
     return (
-        <nav className="flex items-center justify-between bg-gray-100 p-4 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+        <nav className="relative z-50 flex items-center justify-between bg-gray-100 p-4 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
             <Link href={'/'}>
                 <div className="flex items-center">
                     <img src="/logo192.png" alt="ScootRadio Logo" className="h-8 w-8" />

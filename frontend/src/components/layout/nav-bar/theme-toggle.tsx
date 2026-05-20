@@ -39,9 +39,9 @@ export function ThemeToggle() {
                 {ButtonIcon}
             </PopoverButton>
 
-            <PopoverBackdrop className="fixed inset-0" />
+            <PopoverBackdrop className="fixed inset-0 z-40" />
 
-            <PopoverPanel className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-sm border border-gray-200 bg-white shadow-lg dark:border-slate-600 dark:bg-slate-800">
+            <PopoverPanel className="absolute right-0 z-50 mt-2 w-40 origin-top-right rounded-sm border border-gray-200 bg-white shadow-lg dark:border-slate-600 dark:bg-slate-800">
                 {({ close }) => (
                     <div className="py-1">
                         {THEME_OPTIONS.map(({ id, label, Icon }) => (
