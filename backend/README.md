@@ -8,6 +8,7 @@
     - inserts basic seed data
 - Create a migration `make create-migration`
 - Run in migrations `make migrate`
+- Revert most recent migration `make migrate-down`
 - Run seed `make seed`
 - Lint and Format `make lint` 
 

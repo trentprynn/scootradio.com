@@ -1,6 +1,7 @@
 import asyncio
 import structlog
-import subprocess
+from alembic import command
+from alembic.config import Config
 from .wait_db import wait_db
 
 log = structlog.get_logger()
@@ -8,18 +9,9 @@ log = structlog.get_logger()
 
 def migrate():
     log.info("running migrations")
-    try:
-        migration_result = subprocess.run(
-            ["alembic", "upgrade", "head"], check=False, capture_output=True, text=True
-        )
-        if migration_result.returncode != 0:
-            log.error("Migration errors:")
-            log.error(migration_result.stdout)
-            log.error(migration_result.stderr)
-        else:
-            log.info("migrations complete")
-    except Exception as e:
-        log.error("Error occurred during migration: %s", e)
+    alembic_cfg = Config("alembic.ini")
+    command.upgrade(alembic_cfg, "head")
+    log.info("migrations complete")
 
 
 async def entrypoint() -> None:

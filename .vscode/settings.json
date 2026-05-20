@@ -16,10 +16,12 @@
         "pydantic",
         "REDISHOST",
         "REDISPORT",
+        "sessionmaker",
         "SPINITRON",
         "SQLALCHEMY",
         "sqlmodel",
         "structlog",
+        "wavify",
         "zustand"
     ]
 }

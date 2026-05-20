@@ -3,7 +3,6 @@ from logging.config import fileConfig
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import create_async_engine
 from alembic import context
-from app.core.db import engine
 from app.core.config import settings
 
 # ---- MODEL IMPORTS FOR AUTO MIGRATION SUPPORT ----
@@ -46,7 +45,10 @@ def do_run_migrations(connection):
 
 async def run_migrations_online():
     """Run migrations in 'online' mode."""
-    connectable = engine
+    connectable = create_async_engine(
+        settings.async_database_url,
+        poolclass=pool.NullPool,
+    )
 
     async with connectable.connect() as connection:
         await connection.run_sync(do_run_migrations)

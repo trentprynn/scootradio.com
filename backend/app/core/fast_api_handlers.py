@@ -1,11 +1,13 @@
 import structlog
 import traceback
+import asyncio
 from fastapi import FastAPI, Request
 from contextlib import asynccontextmanager
 from fastapi.responses import JSONResponse
 from scripts.wait_db import wait_db
 from scripts.migrate import migrate
 from scripts.seed import seed
+from app.core.db import engine
 
 
 log = structlog.get_logger()
@@ -18,17 +20,17 @@ async def lifespan(_: FastAPI):
     """
     # startup events
     log.info("FastAPI application starting up")
-
     await wait_db()
-    migrate()
+    await asyncio.to_thread(migrate)
     await seed()
-
     log.info("FastAPI application startup complete")
 
+    # app running
     yield
 
     # shutdown events
     log.info("FastAPI application shutting down")
+    await engine.dispose()
 
 
 async def exception_handler(_: Request, exc: Exception):

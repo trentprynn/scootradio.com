@@ -43,7 +43,7 @@ async def read_radio_station(session: SessionDep, name: str) -> RadioStationDTO:
     """
     stmt = select(RadioStationModel).filter_by(name=name)
     result = await session.scalars(stmt)
-    radio_station_model = result.first()
+    radio_station_model = result.one_or_none()
 
     if radio_station_model is None:
         raise HTTPException(status_code=404, detail=f"Station {name} was not found")
@@ -65,7 +65,7 @@ async def read_radio_station_now_playing(
 
     stmt = select(RadioStationModel).filter_by(name=name)
     result = await session.scalars(stmt)
-    radio_station_model = result.first()
+    radio_station_model = result.one_or_none()
 
     if radio_station_model is None:
         raise HTTPException(status_code=404, detail=f"Station {name} was not found")
